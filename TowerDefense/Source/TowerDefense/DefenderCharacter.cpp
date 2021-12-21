@@ -2,7 +2,8 @@
 
 
 #include "DefenderCharacter.h"
-#include "AWeapon.h"
+#include "Weapon.h"
+#include "BulletShot.h"
 
 // Sets default values
 ADefenderCharacter::ADefenderCharacter()
@@ -31,6 +32,9 @@ ADefenderCharacter::ADefenderCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	// Default offset from the character location for projectiles to spawn
+	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
 	bDead = false;
 }
 
@@ -49,7 +53,7 @@ void ADefenderCharacter::BeginPlay()
 		WeaponTransform.SetLocation(FVector::ZeroVector);
 		WeaponTransform.SetRotation(FQuat(FRotator::ZeroRotator));
 
-		Weapon = GetWorld()->SpawnActor<AAWeapon>(WeaponClass, WeaponTransform, SpawnParams);
+		Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, WeaponTransform, SpawnParams);
 		if (Weapon)
 		{
 			Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("s_hand_r"));
@@ -57,6 +61,42 @@ void ADefenderCharacter::BeginPlay()
 	}
 	
 	
+}
+
+// Called every frame
+void ADefenderCharacter::OnFire()
+{
+	UWorld* const World = GetWorld();
+	if (World != nullptr)
+	{
+		const FRotator SpawnRotation = GetControlRotation();
+		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		const FVector SpawnLocation = GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
+
+		//Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// spawn the projectile at the muzzle
+		World->SpawnActor<ABulletShot>(Bullet, SpawnLocation, SpawnRotation, ActorSpawnParams);
+	}
+
+	// try and play the sound if specified
+	//if (FireSound != nullptr)
+	//{
+	//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	//}
+
+	//// try and play a firing animation if specified
+	//if (FireAnimation != nullptr)
+	//{
+	//	// Get the animation object for the arms mesh
+	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+	//	if (AnimInstance != nullptr)
+	//	{
+	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
+	//	}
+	//}
 }
 
 // Called every frame
@@ -79,6 +119,9 @@ void ADefenderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ADefenderCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADefenderCharacter::MoveRight);
+
+	// Bind fire event
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADefenderCharacter::OnFire);
 
 }
 

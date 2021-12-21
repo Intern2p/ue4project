@@ -15,8 +15,9 @@
 
 #include "DefenderCharacter.generated.h"
 
-class AAWeapon;
+class AWeapon;
 class USkeletalMeshComponent;
+class ABulletShot;
 UCLASS()
 class TOWERDEFENSE_API ADefenderCharacter : public ACharacter
 {
@@ -32,6 +33,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	UCameraComponent* FollowCamera;
 
+	/** Gun muzzle's offset from the characters location */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	FVector GunOffset;
+
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<ABulletShot> Bullet;
+
+	/** Whether to use motion controller location for aiming. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	uint8 bUsingMotionControllers : 1;
+
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 
@@ -41,12 +54,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
-	TSubclassOf<AAWeapon> WeaponClass;
+	void OnFire();
 
-	class AAWeapon* Weapon;
+	class AWeapon* Weapon;
 
 public:	
+
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
+	TSubclassOf<AActor> WeaponClass;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
