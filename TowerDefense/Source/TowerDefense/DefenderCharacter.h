@@ -37,10 +37,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	FVector GunOffset;
 
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<ABulletShot> Bullet;
-
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
@@ -53,15 +49,26 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	void OnFire();
 
-	class AWeapon* Weapon;
+	AWeapon* SkeletalWeapon;
 
 public:	
 
+
+
+	/** Projectile class to spawn */
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
+	bool bHasWeapon;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
 	TSubclassOf<AActor> WeaponClass;
+
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Actor)
+	int Health;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -70,3 +77,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
+
+

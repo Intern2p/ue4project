@@ -24,6 +24,9 @@ ABulletShot::ABulletShot()
 	// Set as root component
 	RootComponent = CollisionComp;
 
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlacableActor"));
+	StaticMesh->SetupAttachment(CollisionComp);
+
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;

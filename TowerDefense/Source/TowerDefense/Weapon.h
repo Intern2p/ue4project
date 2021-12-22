@@ -21,6 +21,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FireAnimation)
 	class UAnimationAsset* FireAnimation;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Damage)
+	float Damage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

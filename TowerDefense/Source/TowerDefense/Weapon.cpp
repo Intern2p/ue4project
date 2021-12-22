@@ -20,6 +20,7 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Fire()
 {
-	//MeshComp->PlayAnimation(FireAnimation, false);
+
+
 }
 

@@ -13,9 +13,9 @@ ADefenderCharacter::ADefenderCharacter()
 
 	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationRoll = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
@@ -36,6 +36,7 @@ ADefenderCharacter::ADefenderCharacter()
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
 	bDead = false;
+	bHasWeapon = false;
 }
 
 // Called when the game starts or when spawned
@@ -45,6 +46,8 @@ void ADefenderCharacter::BeginPlay()
 
 	if (WeaponClass)
 	{
+		bHasWeapon = true;
+
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.bNoFail = true;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -53,32 +56,36 @@ void ADefenderCharacter::BeginPlay()
 		WeaponTransform.SetLocation(FVector::ZeroVector);
 		WeaponTransform.SetRotation(FQuat(FRotator::ZeroRotator));
 
-		Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, WeaponTransform, SpawnParams);
-		if (Weapon)
+		SkeletalWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, WeaponTransform, SpawnParams);
+		if (SkeletalWeapon)
 		{
-			Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("s_hand_r"));
+			SkeletalWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("s_hand_r"));
 		}
 	}
 	
 	
-}
+	}
 
 // Called every frame
 void ADefenderCharacter::OnFire()
 {
+	//SkeletalWeapon->Fire();
+
 	UWorld* const World = GetWorld();
-	if (World != nullptr)
+	if (World != nullptr && ProjectileClass != nullptr)
 	{
 		const FRotator SpawnRotation = GetControlRotation();
 		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 		const FVector SpawnLocation = GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
 
-		//Set Spawn Collision Handling Override
+		// Set Spawn Collision Handling Override
 		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		// spawn the projectile at the muzzle
-		World->SpawnActor<ABulletShot>(Bullet, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		World->SpawnActor<ABulletShot>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %f"), SpawnLocation.X));
 	}
 
 	// try and play the sound if specified
@@ -97,7 +104,13 @@ void ADefenderCharacter::OnFire()
 	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
 	//	}
 	//}
+
 }
+
+//bool ADefenderCharacter::HasWeapon()
+//{
+//	return bHasWeapon;
+//}
 
 // Called every frame
 void ADefenderCharacter::Tick(float DeltaTime)

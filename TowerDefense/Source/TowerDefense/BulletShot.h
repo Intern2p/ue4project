@@ -27,6 +27,10 @@ public:
 	ABulletShot();
 
 public:	
+
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = "StaticMesh")
+	UStaticMeshComponent* StaticMesh;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
