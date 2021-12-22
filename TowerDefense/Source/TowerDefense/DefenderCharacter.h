@@ -43,19 +43,18 @@ public:
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
-
 	bool bDead;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void OnFire();
+	void Die();
 
 	AWeapon* SkeletalWeapon;
+	float CurHealth;
 
 public:	
-
-
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
@@ -68,10 +67,12 @@ public:
 	TSubclassOf<AActor> WeaponClass;
 
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Actor)
-	int Health;
+	float MaxHealth;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void Damage();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

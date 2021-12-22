@@ -18,9 +18,3 @@ void AWeapon::BeginPlay()
 	
 }
 
-void AWeapon::Fire()
-{
-
-
-}
-
