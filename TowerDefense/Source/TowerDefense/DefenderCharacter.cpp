@@ -2,7 +2,7 @@
 
 
 #include "DefenderCharacter.h"
-#include "Weapon.h"
+#include "TowerDefense/SpawnElements/Equipments/Weapon.h"
 #include "BulletShot.h"
 
 // Sets default values
@@ -72,39 +72,40 @@ void ADefenderCharacter::BeginPlay()
 void ADefenderCharacter::OnFire()
 {
 	//SkeletalWeapon->Fire();
-
-	UWorld* const World = GetWorld();
-	if (World != nullptr && ProjectileClass != nullptr)
+	if (WeaponClass != nullptr && ProjectileClass != nullptr)
 	{
-		const FRotator SpawnRotation = GetControlRotation();// SkeletalWeapon->GetActorRotation(); //
-		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-		const FVector SpawnLocation = SkeletalWeapon->GetActorLocation() + SpawnRotation.RotateVector(GunOffset);// GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
-	
-		// Set Spawn Collision Handling Override
-		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			const FRotator SpawnRotation = GetControlRotation();// SkeletalWeapon->GetActorRotation(); //
+			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+			const FVector SpawnLocation = SkeletalWeapon->GetActorLocation() + SpawnRotation.RotateVector(GunOffset);// GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
 
-		// spawn the projectile at the muzzle
-		World->SpawnActor<ABulletShot>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			// Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+			// spawn the projectile at the muzzle
+			World->SpawnActor<ABulletShot>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		}
+
+		// try and play the sound if specified
+		//if (FireSound != nullptr)
+		//{
+		//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		//}
+
+		//// try and play a firing animation if specified
+		//if (FireAnimation != nullptr)
+		//{
+		//	// Get the animation object for the arms mesh
+		//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		//	if (AnimInstance != nullptr)
+		//	{
+		//		AnimInstance->Montage_Play(FireAnimation, 1.f);
+		//	}
+		//}
 	}
-
-	// try and play the sound if specified
-	//if (FireSound != nullptr)
-	//{
-	//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	//}
-
-	//// try and play a firing animation if specified
-	//if (FireAnimation != nullptr)
-	//{
-	//	// Get the animation object for the arms mesh
-	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-	//	if (AnimInstance != nullptr)
-	//	{
-	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
-	//	}
-	//}
-
 }
 
 //bool ADefenderCharacter::HasWeapon()
