@@ -15,8 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	AWeapon();
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MeshComp)
-	//class USkeletalMeshComponent* MeshComp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MeshComp)
+	class USkeletalMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = FireAnimation)
 	class UAnimationAsset* FireAnimation;

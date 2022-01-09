@@ -3,3 +3,9 @@
 
 #include "CraftingMaterial.h"
 
+ACraftingMaterial::ACraftingMaterial()
+{
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	//RootComponent = StaticMesh;
+	StaticMesh->SetupAttachment(RootComponent);
+}

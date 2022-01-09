@@ -3,6 +3,8 @@
 
 #include "DefenderCharacter.h"
 #include "TowerDefense/SpawnElements/Equipments/Weapon.h"
+#include "Inventory.h"
+#include "DrawDebugHelpers.h"
 #include "BulletShot.h"
 
 // Sets default values
@@ -60,10 +62,10 @@ void ADefenderCharacter::BeginPlay()
 		WeaponTransform.SetLocation(FVector::ZeroVector);
 		WeaponTransform.SetRotation(FQuat(FRotator::ZeroRotator));
 
-		SkeletalWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, WeaponTransform, SpawnParams);
-		if (SkeletalWeapon)
+		WeaponPickup = GetWorld()->SpawnActor<AWeapon>(WeaponClass, WeaponTransform, SpawnParams);
+		if (WeaponPickup)
 		{
-			SkeletalWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("s_hand_r"));
+			WeaponPickup->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("s_hand_r"));
 		}
 	}
 }
@@ -71,23 +73,23 @@ void ADefenderCharacter::BeginPlay()
 // Called every frame
 void ADefenderCharacter::OnFire()
 {
-	//SkeletalWeapon->Fire();
+	//WeaponPickup->Fire();
 	if (WeaponClass != nullptr && ProjectileClass != nullptr)
 	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			const FRotator SpawnRotation = GetControlRotation();// SkeletalWeapon->GetActorRotation(); //
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = SkeletalWeapon->GetActorLocation() + SpawnRotation.RotateVector(GunOffset);// GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
+		//UWorld* const World = GetWorld();
+		//if (World != nullptr)
+		//{
+		//	const FRotator SpawnRotation = GetControlRotation();// WeaponPickup->GetActorRotation(); //
+		//	// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		//	const FVector SpawnLocation = WeaponPickup->GetActorLocation() + SpawnRotation.RotateVector(GunOffset);// GetActorLocation() + SpawnRotation.RotateVector(GunOffset);
 
-			// Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		//	// Set Spawn Collision Handling Override
+		//	FActorSpawnParameters ActorSpawnParams;
+		//	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-			// spawn the projectile at the muzzle
-			World->SpawnActor<ABulletShot>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
+		//	// spawn the projectile at the muzzle
+		//	World->SpawnActor<ABulletShot>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		//}
 
 		// try and play the sound if specified
 		//if (FireSound != nullptr)
@@ -105,6 +107,42 @@ void ADefenderCharacter::OnFire()
 		//		AnimInstance->Montage_Play(FireAnimation, 1.f);
 		//	}
 		//}
+	}
+
+	FHitResult OutHit;
+	FVector Start = WeaponPickup->GetActorLocation();
+
+	FVector ForwardVector = FollowCamera->GetForwardVector();
+	/*if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
+
+		ForwardVector.X += 0.022;
+		ForwardVector.Y += 0.08;
+		ForwardVector.Z += 0.147;
+	
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
+	}*/
+	FVector End = ((ForwardVector * 1000.f) + Start);
+	//FVector End = ;
+	FCollisionQueryParams CollisionParams;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, true);
+
+	bool isHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+	if (isHit)
+	{
+		if (OutHit.bBlockingHit)
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hiting %s"), *OutHit.GetActor()->GetName()));
+
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point %s"), *OutHit.ImpactPoint.ToString()));
+
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Normal %s"), *OutHit.ImpactNormal.ToString()));
+			}
+		}
 	}
 }
 
@@ -170,7 +208,7 @@ void ADefenderCharacter::Damage()
 	{
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Health %f"), CurHealth));
-		CurHealth -= SkeletalWeapon->Damage;
+		CurHealth -= WeaponPickup->Damage;
 		if (CurHealth <= 0)
 		{
 			CurHealth = 0;
@@ -186,7 +224,7 @@ void ADefenderCharacter::Die()
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("DIE"), CurHealth));
 
-	//SkeletalWeapon->SetLifeSpan(1.f);
+	//WeaponPickup->SetLifeSpan(1.f);
 	//SetLifeSpan(1.f);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
@@ -196,3 +234,14 @@ void ADefenderCharacter::Die()
 		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
 	}*/
 }
+
+
+/*INVENTORY*/
+
+void ADefenderCharacter::PickUp(ASpawnElement* PickUpElement)
+{
+	//Inventory.Add(PickUpElement);
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("overlap2")));
+}
+

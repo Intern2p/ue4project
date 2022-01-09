@@ -14,4 +14,10 @@ class TOWERDEFENSE_API ACraftingMaterial : public ASpawnElement
 {
 	GENERATED_BODY()
 	
+public:
+	// Sets default values for this actor's properties
+	ACraftingMaterial();
+
+	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = "StaticMesh")
+		UStaticMeshComponent* StaticMesh;
 };

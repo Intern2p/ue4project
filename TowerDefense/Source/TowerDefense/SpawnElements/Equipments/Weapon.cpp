@@ -7,8 +7,9 @@
 // Sets default values
 AWeapon::AWeapon()
 {
-	//MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
-	//RootComponent = MeshComp;
+	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+	RootComponent = MeshComp;
+	//MeshComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

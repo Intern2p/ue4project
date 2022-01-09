@@ -12,12 +12,15 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Containers/Array.h"
 
 #include "DefenderCharacter.generated.h"
 
 class AWeapon;
 class USkeletalMeshComponent;
 class ABulletShot;
+class ASpawnElement;
+class UInventory;
 UCLASS()
 class TOWERDEFENSE_API ADefenderCharacter : public ACharacter
 {
@@ -43,7 +46,6 @@ public:
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
-	bool bDead;
 
 protected:
 	// Called when the game starts or when spawned
@@ -51,9 +53,7 @@ protected:
 	void OnFire();
 	void Die();
 
-	AWeapon* SkeletalWeapon;
-	float CurHealth;
-
+	AWeapon* WeaponPickup;
 public:	
 
 	/** Projectile class to spawn */
@@ -66,13 +66,20 @@ public:
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Weapon)
 	TSubclassOf<AActor> WeaponClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UInventory* Inventory;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = Actor)
 	float MaxHealth;
+	float CurHealth;
+
+	bool bDead;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void Damage();
+	void PickUp(ASpawnElement* PickUpElement);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

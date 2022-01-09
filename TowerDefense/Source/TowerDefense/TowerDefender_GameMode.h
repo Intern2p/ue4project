@@ -14,4 +14,6 @@ class TOWERDEFENSE_API ATowerDefender_GameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+public:
+	ATowerDefender_GameMode();
 };

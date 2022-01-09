@@ -27,15 +27,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereCollider;
 
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* MeshComp;
+	//UPROPERTY(EditAnywhere)
+	//USkeletalMeshComponent* MeshComp;
 
 	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
+	void OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };
