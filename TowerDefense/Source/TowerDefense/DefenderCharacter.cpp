@@ -107,40 +107,41 @@ void ADefenderCharacter::OnFire()
 		//		AnimInstance->Montage_Play(FireAnimation, 1.f);
 		//	}
 		//}
-	}
 
-	FHitResult OutHit;
-	FVector Start = WeaponPickup->GetActorLocation();
 
-	FVector ForwardVector = FollowCamera->GetForwardVector();
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
+		FHitResult OutHit;
+		FVector Start = WeaponPickup->GetActorLocation();
 
-		ForwardVector.X += 0.022;
-		ForwardVector.Y += 0.08;
-		ForwardVector.Z += 0.147;
-	
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
-	}*/
-	FVector End = ((ForwardVector * 1000.f) + Start);
-	//FVector End = ;
-	FCollisionQueryParams CollisionParams;
-
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, true);
-
-	bool isHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
-	if (isHit)
-	{
-		if (OutHit.bBlockingHit)
+		FVector ForwardVector = FollowCamera->GetForwardVector();
+		/*if (GEngine)
 		{
-			if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
+
+			ForwardVector.X += 0.022;
+			ForwardVector.Y += 0.08;
+			ForwardVector.Z += 0.147;
+
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("ForwardVector x = %f; y = %f; z = %f"), ForwardVector.X, ForwardVector.Y, ForwardVector.Z));
+		}*/
+		FVector End = ((ForwardVector * 1000.f) + Start);
+		//FVector End = ;
+		FCollisionQueryParams CollisionParams;
+
+		DrawDebugLine(GetWorld(), Start, End, FColor::Green, true);
+
+		bool isHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+		if (isHit)
+		{
+			if (OutHit.bBlockingHit)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hiting %s"), *OutHit.GetActor()->GetName()));
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hiting %s"), *OutHit.GetActor()->GetName()));
 
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point %s"), *OutHit.ImpactPoint.ToString()));
+					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point %s"), *OutHit.ImpactPoint.ToString()));
 
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Normal %s"), *OutHit.ImpactNormal.ToString()));
+					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Normal %s"), *OutHit.ImpactNormal.ToString()));
+				}
 			}
 		}
 	}

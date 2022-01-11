@@ -14,22 +14,15 @@ ASpawnElement::ASpawnElement()
 	/*MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	RootComponent = MeshComp;*/
 
-
-	//MyCollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphereComponent"));
-	//MyCollisionSphere->InitSphereRadius(Radius);
-	//MyCollisionSphere->SetCollisionProfileName("Trigger");
-	////RootComponent = MyCollisionSphere;
-	//MyCollisionSphere->SetupAttachment(RootComponent);
-	//MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &APlacableActor::OnOverlapBegin);
-
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("BoxCollider"));
-	//SphereCollider->SetGenerateOverlapEvents(true);
-	SphereCollider->InitSphereRadius(100.0f);
+	SphereCollider->InitSphereRadius(80.0f);
 	SphereCollider->SetCollisionProfileName("Trigger");
 	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ASpawnElement::OnOverlapBegin);
 	SphereCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	//RootComponent = SphereCollider;
 	//SphereCollider->SetupAttachment(RootComponent);
+
+	bPickUpable = false;
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +35,7 @@ void ASpawnElement::BeginPlay()
 void ASpawnElement::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), 100.0f, 20, FColor::Purple, false, -1, 0, 1);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), 80.0f, 20, FColor::Purple, false, -1, 0, 1);
 }
 
 void ASpawnElement::OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -54,8 +47,11 @@ void ASpawnElement::OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* Oth
 		ADefenderCharacter* MyCharacter = Cast<ADefenderCharacter>(OtherActor);
 		if (MyCharacter != nullptr)
 		{
-			MyCharacter->PickUp(this);
-			Destroy();
+			bPickUpable = true;
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Press E to pick up")));
+			//MyCharacter->PickUp(this);
+			//Destroy();
 		}
 
 	}
