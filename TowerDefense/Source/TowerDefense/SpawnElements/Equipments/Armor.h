@@ -7,22 +7,30 @@
 #include "TowerDefense/SpawnElements/CraftingMaterial.h"
 #include "Armor.generated.h"
 
-/**
- * 
- */
+class ACraftingMaterial;
 UCLASS()
 class TOWERDEFENSE_API AArmor : public ACharacterEquipment
 {
 	GENERATED_BODY()
 
 public:
+	AArmor();
 
-	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Specifications")
-	TSubclassOf<ACraftingMaterial> Material;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = ArmorMaterial)
+	TSubclassOf<ACraftingMaterial> ClassMaterial;
 
-	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Specifications")
-	float BlockingDamage;
+	UFUNCTION()
+	void CreateNewArmor(UClass* NewMaterial);
 
-	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Specifications")
-	int NecessaryCountMaterials;
+	UFUNCTION()
+	float BlockDamage(float Damage);
+
+	UFUNCTION()
+	ACraftingMaterial* GetMaterial();
+
+	UFUNCTION()
+	float GetBlockingDamage();
+
+private:
+	ACraftingMaterial* Material;
 };

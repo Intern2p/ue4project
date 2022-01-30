@@ -2,7 +2,27 @@
 
 
 #include "FPSHUD.h"
+#include "Components/WidgetComponent.h"
 
+void AFPSHUD::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // If any widgets need to be added
+    if (AllUIWidgets.Num() > 0)
+    {
+        // Iterate through all widgets
+        for (TSubclassOf<UUserWidget> widget : AllUIWidgets)
+        {
+            // Create an instance of the widget and add to viewport
+            UUserWidget* createdWidget = CreateWidget<UUserWidget>(GetWorld(), widget);
+            createdWidget->AddToViewport();
+
+            // Store instanced widget in array
+           // m_createdWidgets.Add(createdWidget);
+        }
+    }
+}
 void AFPSHUD::DrawHUD()
 {
     Super::DrawHUD();

@@ -2,7 +2,7 @@
 
 
 #include "TowerDefender_GameMode.h"
-#include "DefenderCharacter.h"
+#include "TowerDefense/Characters/DefenderCharacter.h"
 #include "FPSHUD.h"
 
 ATowerDefender_GameMode::ATowerDefender_GameMode()
@@ -18,5 +18,4 @@ ATowerDefender_GameMode::ATowerDefender_GameMode()
 	{
 		HUDClass = FPSHUDBPClass.Class;
 	}
-	
 }

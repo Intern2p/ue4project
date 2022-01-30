@@ -9,6 +9,8 @@
 /**
  * 
  */
+class ADefenderCharacter;
+class UInventoryComponent;
 UCLASS()
 class TOWERDEFENSE_API ACraftingMaterial : public ASpawnElement
 {
@@ -20,4 +22,8 @@ public:
 
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = "StaticMesh")
 		UStaticMeshComponent* StaticMesh;
+
+	virtual float GetArmorBlockingDamage();
+	virtual int GetArmorNecessaryCountMaterials();
+	virtual void PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory);
 };

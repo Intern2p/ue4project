@@ -7,6 +7,8 @@
 #include "Components/SphereComponent.h"
 #include "SpawnElement.generated.h"
 
+class ADefenderCharacter;
+class UInventoryComponent;
 UCLASS()
 class TOWERDEFENSE_API ASpawnElement : public AActor
 {
@@ -30,8 +32,8 @@ public:
 	//UPROPERTY(EditAnywhere)
 	//USkeletalMeshComponent* MeshComp;
 	
-	bool bPickUpable;
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	
+	virtual void PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory);
 };

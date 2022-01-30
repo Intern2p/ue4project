@@ -7,20 +7,24 @@
 #include "Engine/Canvas.h"
 #include "FPSHUD.generated.h"
 
-/**
- * 
- */
+class UUserWidget;
 UCLASS()
 class TOWERDEFENSE_API AFPSHUD : public AHUD
 {
 	GENERATED_BODY()
 	
 protected:
-	// This will be drawn at the center of the screen.
+
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* CrosshairTexture;
 
 public:
+	// This will be drawn at the center of the screen.
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<class UUserWidget>> AllUIWidgets;
+
 	// Primary draw call for the HUD.
 	virtual void DrawHUD() override;
 

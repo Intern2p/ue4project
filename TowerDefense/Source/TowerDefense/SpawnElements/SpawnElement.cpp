@@ -2,7 +2,8 @@
 
 
 #include "SpawnElement.h"
-#include "TowerDefense/DefenderCharacter.h"
+#include "TowerDefense/Characters/DefenderCharacter.h"
+#include "TowerDefense/Components/InventoryComponent.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -22,7 +23,7 @@ ASpawnElement::ASpawnElement()
 	//RootComponent = SphereCollider;
 	//SphereCollider->SetupAttachment(RootComponent);
 
-	bPickUpable = false;
+	//bPickUpable = false;
 }
 
 // Called when the game starts or when spawned
@@ -40,24 +41,16 @@ void ASpawnElement::Tick(float DeltaTime)
 
 void ASpawnElement::OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Check if the OtherActor is not me and if it is not NULL
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		//try to cast
 		ADefenderCharacter* MyCharacter = Cast<ADefenderCharacter>(OtherActor);
 		if (MyCharacter != nullptr)
 		{
-			bPickUpable = true;
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Press E to pick up")));
-			//MyCharacter->PickUp(this);
-			//Destroy();
+			MyCharacter->CanPickUpMessage();
 		}
-
 	}
-	/*ACharacter* MyCharacter = Cast<ACharacter>(OtherActor);
-	if ((OtherActor != nullptr) && (MyCharacter != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
-	{
-		Destroy();
-	}*/
 }
+
+void ASpawnElement::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory) {};
