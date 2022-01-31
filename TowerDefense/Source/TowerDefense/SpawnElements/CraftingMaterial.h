@@ -6,9 +6,6 @@
 #include "SpawnElement.h"
 #include "CraftingMaterial.generated.h"
 
-/**
- * 
- */
 class ADefenderCharacter;
 class UInventoryComponent;
 UCLASS()

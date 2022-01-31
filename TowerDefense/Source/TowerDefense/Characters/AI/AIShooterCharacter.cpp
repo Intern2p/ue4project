@@ -3,6 +3,7 @@
 
 #include "AIShooterCharacter.h"
 #include "Perception/PawnSensingComponent.h"
+#include "TowerDefense/Components/HealthComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "AIControllerShooterCharacter.h"
 #include "TowerDefense/Characters/DefenderCharacter.h"
@@ -68,7 +69,7 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 
 		ADefenderCharacter* Char = Cast<ADefenderCharacter>(Pawn);
 
-		if (ControllerShooterCharacter && Char)
+		if (ControllerShooterCharacter && Char && Char->isAlive)
 		{
 			bCanSeePlayer = true;
 			VisiblePlayer = Pawn;
@@ -84,25 +85,20 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 			//CameraBoom->SetWorldRotation(PlayerRot);
 			//FollowCamera->SetWorldRotation(PlayerRot);
 			//ControllerShooterCharacter->TryToFire(ControllerShooterCharacter, Pawn);
-			/*if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("see player")));
+
 			FTimerHandle TimerHandle;
-			FTimerDelegate  TimerDel;
+			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("CantSeePlayer"), ControllerShooterCharacter);
-			GetWorldTimerManager().SetTimer(TimerHandle, TimerDel, 5.0f, true);*/
-			
+			GetWorldTimerManager().SetTimer(TimerHandle, TimerDel, 2.f, false);
 		}
 	}
 }
 
-//void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter)
-//{
-//	if (GEngine)
-//		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("dont see player")));
-//	//AAIControllerShooterCharacter* ControllerShooterCharacter = Cast<AAIControllerShooterCharacter>(GetController());
-//	ControllerShooterCharacter->SetPlayerSighted(false);
-//	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
-//}
+void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter)
+{
+	ControllerShooterCharacter->SetPlayerSighted(false);
+	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
+}
 
 // Called every frame
 void AAIShooterCharacter::Tick(float DeltaTime)
@@ -114,5 +110,15 @@ void AAIShooterCharacter::Tick(float DeltaTime)
 		FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), EndLocation);
 		FRotator NewRot = FMath::RInterpTo(GetMesh()->GetComponentRotation(), PlayerRot, DeltaTime, 2);
 		SetActorRotation(PlayerRot);
+	}*/
+}
+
+void AAIShooterCharacter::Die()
+{
+	Super::Die();
+	// Get the animation object for the die
+	/*if (AnimDieInstance != nullptr)
+	{
+		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
 	}*/
 }

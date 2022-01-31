@@ -37,9 +37,11 @@ protected:
 
 	AWeapon* WeaponPickup;
 	AArmor* ArmorWear;
-	bool isAlive;
 
 public:
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Health)
+	bool isAlive;
+
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Equipment)
 	bool bHasWeapon;
 
@@ -49,11 +51,8 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Equipment)
 	TSubclassOf<AActor> ArmorClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Health)
 	UHealthComponent* Health;
-
-	UFUNCTION(BlueprintCallable)
-	void Die();
 
 	UFUNCTION(BlueprintCallable)
 	void OnFire();
@@ -76,7 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetArmorBlockingDamage();
 
+	virtual void Die();
 	virtual FVector GetPawnViewLocation() const;
-	//void ReceiveAnyDamage(float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };
 

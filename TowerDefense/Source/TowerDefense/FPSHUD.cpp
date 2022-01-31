@@ -17,9 +17,6 @@ void AFPSHUD::BeginPlay()
             // Create an instance of the widget and add to viewport
             UUserWidget* createdWidget = CreateWidget<UUserWidget>(GetWorld(), widget);
             createdWidget->AddToViewport();
-
-            // Store instanced widget in array
-           // m_createdWidgets.Add(createdWidget);
         }
     }
 }

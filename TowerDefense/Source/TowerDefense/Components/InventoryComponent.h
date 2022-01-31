@@ -20,9 +20,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-private:
-	
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -32,7 +29,8 @@ public:
 
 	UFUNCTION()
 	void AddCountMaterial(int count, FString MaterialName);
-	TMap<FString, int> CountMaterials;
 
+private:
+	TMap<FString, int> CountMaterials;
 
 };

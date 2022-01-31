@@ -26,8 +26,11 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Health")
-		float DefaultHealth;
+	float DefaultHealth;
 
 	UPROPERTY(BluePrintReadWrite)
-		float CurrentHealth;
+	float CurrentHealth;
+
+	UFUNCTION(BlueprintCallable)
+		void Regenerate();
 };

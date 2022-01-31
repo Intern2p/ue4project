@@ -7,8 +7,6 @@
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
 	DefaultHealth = 100;
@@ -35,20 +33,20 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 	{
 		/* Block armory damage */
 		Damage = Player->BlockPlayerDamage(Damage);
-
 		if (Damage <= 0)
 		{
 			return;
 		}
-	
 		CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, DefaultHealth);
 
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("taken dammage %f"), CurrentHealth));
-	
 		if (CurrentHealth <= 0.f)
 		{
 			Player->Die();
 		}
 	}
+}
+
+void UHealthComponent::Regenerate()
+{
+	CurrentHealth = DefaultHealth;
 }

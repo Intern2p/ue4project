@@ -12,15 +12,6 @@ AWood::AWood()
 	ArmorNecessaryCountMaterials = 5;
 }
 
-//void Pickup(DefenderCharacter* pawn)
-//{
-//
-//	if (Char
-//	player->inventory get curent count
-//	if (ArmorNecessaryCountMaterials)
-//		player->create armor
-//}
-
 float AWood::GetArmorBlockingDamage()
 {
 	return ArmorBlockingDamage;

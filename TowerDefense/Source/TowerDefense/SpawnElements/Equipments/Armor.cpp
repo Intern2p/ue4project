@@ -8,10 +8,8 @@
 
 AArmor::AArmor()
 {
-	//ClassMaterial
-	//Material = GetWorld()->SpawnActor<ACraftingMaterial>(AWood::StaticClass());
 	if (ClassMaterial)
-	Material = GetWorld()->SpawnActor<ACraftingMaterial>(ClassMaterial);
+		Material = GetWorld()->SpawnActor<ACraftingMaterial>(ClassMaterial);
 }
 
 float AArmor::BlockDamage(float Damage)

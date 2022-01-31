@@ -6,37 +6,33 @@
 #include "TowerDefense/Components/InventoryComponent.h"
 #include "DrawDebugHelpers.h"
 
+#define PickUpToolTip "Press E to Pick Up"
+
 // Sets default values
 ASpawnElement::ASpawnElement()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	/*MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
-	RootComponent = MeshComp;*/
-
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("BoxCollider"));
-	SphereCollider->InitSphereRadius(80.0f);
+	SphereCollider->InitSphereRadius(330.0f);
 	SphereCollider->SetCollisionProfileName("Trigger");
-	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ASpawnElement::OnOverlapBegin);
 	SphereCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	//RootComponent = SphereCollider;
-	//SphereCollider->SetupAttachment(RootComponent);
-
-	//bPickUpable = false;
 }
 
 // Called when the game starts or when spawned
 void ASpawnElement::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ASpawnElement::OnOverlapBegin);
+	SphereCollider->OnComponentEndOverlap.AddDynamic(this, &ASpawnElement::OnOverlapEnd);
 }
 
 // Called every frame
 void ASpawnElement::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
-	//DrawDebugSphere(GetWorld(), GetActorLocation(), 80.0f, 20, FColor::Purple, false, -1, 0, 1);
 }
 
 void ASpawnElement::OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -46,11 +42,21 @@ void ASpawnElement::OnOverlapBegin(UPrimitiveComponent* OverlapComp, AActor* Oth
 		ADefenderCharacter* MyCharacter = Cast<ADefenderCharacter>(OtherActor);
 		if (MyCharacter != nullptr)
 		{
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Press E to pick up")));
-			MyCharacter->CanPickUpMessage();
+			MyCharacter->ToolTip = PickUpToolTip;
 		}
 	}
 }
 
+void ASpawnElement::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OverlappedComp != nullptr))
+	{
+		ADefenderCharacter* MyCharacter = Cast<ADefenderCharacter>(OtherActor);
+		if (MyCharacter != nullptr)
+		{
+			if (MyCharacter->ToolTip == PickUpToolTip)
+				MyCharacter->ToolTip.Empty();
+		}
+	}
+}
 void ASpawnElement::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory) {};

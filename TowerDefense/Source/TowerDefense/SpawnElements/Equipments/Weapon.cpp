@@ -70,8 +70,7 @@ void AWeapon::Fire()
 
 				AActor* HitActor = Hit.GetActor();
 				
-				UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
-				//Hit.Location
+				UGameplayStatics::ApplyPointDamage(HitActor, Damage, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 			}
 		}
 		

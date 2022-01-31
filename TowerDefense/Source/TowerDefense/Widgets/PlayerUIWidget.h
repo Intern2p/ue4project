@@ -22,8 +22,6 @@ protected:
 
 	virtual void NativeConstruct() override;
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	//FText SetToolTip();
-	void ChangeInventory(FString TextToolTip);
 
 	ADefenderCharacter* OwnerCharacter;
 

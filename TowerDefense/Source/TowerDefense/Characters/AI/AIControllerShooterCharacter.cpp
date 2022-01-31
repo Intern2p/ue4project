@@ -54,8 +54,6 @@ void AAIControllerShooterCharacter::OnPossess(APawn* const pawn)
 
 		//Start the tree
 		BehaviorTreeComp->StartTree(*Char->BehaviorTree);
-
-		//BlackboardComp->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	}
 }
 

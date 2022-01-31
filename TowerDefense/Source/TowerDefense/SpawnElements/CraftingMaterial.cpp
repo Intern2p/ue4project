@@ -10,7 +10,6 @@
 ACraftingMaterial::ACraftingMaterial()
 {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-	//RootComponent = StaticMesh;
 	StaticMesh->SetupAttachment(SphereCollider);
 	StaticMesh->SetCollisionResponseToChannel(ECC_SpawnElements, ECollisionResponse::ECR_Block);
 }

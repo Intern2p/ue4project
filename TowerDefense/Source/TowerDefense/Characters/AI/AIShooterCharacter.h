@@ -35,11 +35,16 @@ public:
 	/*Hearing function - will be executed when we hear a Pawn*/
 //	UFUNCTION()
 	//void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
-	UFUNCTION()
+
+	UFUNCTION(BlueprintCallable)
+	void Die() override;
+
+	UFUNCTION(BlueprintCallable)
 	void OnSeePawn(APawn* Pawn);
 
 private:
-	//void CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter);
+	UFUNCTION()
+	void CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter);
 
 	bool bCanSeePlayer;
 	APawn* VisiblePlayer;

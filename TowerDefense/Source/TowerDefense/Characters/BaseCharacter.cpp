@@ -28,8 +28,7 @@ ABaseCharacter::ABaseCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));	
-	//this->OnTakeAnyDamage.AddDynamic(this, &ABaseCharacter::ReceiveAnyDamage);
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
 // Called when the game starts or when spawned
@@ -39,7 +38,6 @@ void ABaseCharacter::BeginPlay()
 
 	isAlive = true;
 	
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Health %f"), MaxHealth));
 	if (WeaponClass)
 	{
 		bHasWeapon = true;
@@ -82,27 +80,21 @@ void ABaseCharacter::OnFire()
 	}
 }
 
+void ABaseCharacter::Die() {
+	isAlive = false;
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("player death")));
+	//WeaponPickup->SetLifeSpan(7.f);
+	//SetLifeSpan(7.f);
+	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//GetMesh()->SetSimulatePhysics(true);
+}
+
 float ABaseCharacter::BlockPlayerDamage(float Damage)
 {
 	if (ArmorWear)
 		Damage = ArmorWear->BlockDamage(Damage);
 	return Damage;
-}
-
-void ABaseCharacter::Die()
-{
-	isAlive = false;
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("player death")));
-	WeaponPickup->SetLifeSpan(7.f);
-	SetLifeSpan(7.f);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	GetMesh()->SetSimulatePhysics(true);
-	// Get the animation object for the die
-	/*if (AnimDieInstance != nullptr)
-	{
-		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
-	}*/
 }
 
 FVector ABaseCharacter::GetPawnViewLocation() const
@@ -114,12 +106,6 @@ FVector ABaseCharacter::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
-//void ABaseCharacter::ReceiveAnyDamage(float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
-//{
-//	if (GEngine)
-//		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("taken dammaggggge")));
-//}
-
 float ABaseCharacter::GetHealth()
 {
 	if (Health)
@@ -130,7 +116,7 @@ float ABaseCharacter::GetHealth()
 float ABaseCharacter::GetMaxHealth() 
 {
 	if (Health)
-		return Health->DefaultHealth; 
+		return Health->DefaultHealth;
 	return 0;
 }
 

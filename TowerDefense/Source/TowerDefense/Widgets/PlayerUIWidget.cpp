@@ -17,14 +17,10 @@ void UPlayerUIWidget::NativeConstruct()
 	Super::NativeConstruct();
 	ADefenderCharacter* Char = Cast<ADefenderCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (Char)
-	{
 		OwnerCharacter = Char;
-	}
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("AddDynamic")));
-	Char->ChangeStateElement.AddDynamic(this, &UPlayerUIWidget::ChangeInventory);
+
 	VisibleToolTip = ESlateVisibility::Hidden;
-	isActiveToolTip = false;
+	isActiveToolTip = true;
 }
 
 //FText UPlayerUIWidget::SetToolTip()
@@ -47,11 +43,18 @@ void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	
 	if (OwnerCharacter)
 	{
-		HealthBar->SetPercent(OwnerCharacter->GetHealth() / OwnerCharacter->GetMaxHealth());
 		FNumberFormattingOptions Opts;
 		Opts.SetMaximumFractionalDigits(0);
-		CurrentHealthLabel->SetText(FText::AsNumber(OwnerCharacter->GetHealth(), &Opts));
-		MaxHealthLabel->SetText(FText::AsNumber(OwnerCharacter->GetMaxHealth(), &Opts));
+
+		/* Health */
+		if (OwnerCharacter->Health)
+		{
+			HealthBar->SetPercent(OwnerCharacter->GetHealth() / OwnerCharacter->GetMaxHealth());
+			CurrentHealthLabel->SetText(FText::AsNumber(OwnerCharacter->GetHealth(), &Opts));
+			MaxHealthLabel->SetText(FText::AsNumber(OwnerCharacter->GetMaxHealth(), &Opts));
+		}
+
+		/*Inventory*/
 		if (OwnerCharacter->Inventory)
 		{
 			CountWoodLabel->SetText(FText::AsNumber(OwnerCharacter->Inventory->GetCountMaterial(AWood::StaticClass()->GetName()), &Opts));
@@ -59,6 +62,7 @@ void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			CountMetalLabel->SetText(FText::AsNumber(OwnerCharacter->Inventory->GetCountMaterial(AMetal::StaticClass()->GetName()), &Opts));
 		}
 
+		/*Armor*/
 		if (OwnerCharacter->ArmorClass && OwnerCharacter->GetArmorMaterial())
 		{
 			TypeArmorLabel->SetText(FText::FromString(OwnerCharacter->GetArmorMaterial()->GetClass()->GetName()));
@@ -68,14 +72,16 @@ void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			TypeArmorLabel->SetText(FText::FromString(TEXT("Default")));
 		}
 		BlockDamageLabel->SetText(FText::AsNumber(OwnerCharacter->GetArmorBlockingDamage(), &Opts));
-	}
-}
 
-void UPlayerUIWidget::ChangeInventory(FString TextToolTip)
-{
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("teeeeeeeese")));
-		ToolTipLabel->SetText(FText::FromString(TextToolTip));
-		isActiveToolTip = true;
-		VisibleToolTip = ESlateVisibility::Visible;
+		/*ToolTip*/
+		if (OwnerCharacter->ToolTip == "")
+		{
+			VisibleToolTip = ESlateVisibility::Hidden;
+		}
+		else
+		{
+			VisibleToolTip = ESlateVisibility::Visible;
+			ToolTipLabel->SetText(FText::FromString(OwnerCharacter->ToolTip));
+		}
+	}
 }
