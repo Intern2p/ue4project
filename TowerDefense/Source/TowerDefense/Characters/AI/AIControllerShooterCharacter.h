@@ -8,6 +8,7 @@
 
 class UBlackboardComponent;
 class UBehaviorTreeComponent;
+class ATargetLocation;
 UCLASS()
 class TOWERDEFENSE_API AAIControllerShooterCharacter : public AAIController
 {
@@ -18,6 +19,9 @@ public:
 	void BeginPlay() override;
 	void OnPossess(APawn* const pawn) override;
 	//class UBlackboardComponent* get_blackboard() const;
+
+	UPROPERTY(EditDefaultsOnly, Category = AI)
+	ATargetLocation* FinallyLocation;
 
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	class UBehaviorTreeComponent* BehaviorTreeComp;
@@ -44,6 +48,6 @@ public:
 protected:
 
 private:
-	FVector FinallyLocation;
+	
 	//class UBlackboardComponent* BlackboardComp;
 };

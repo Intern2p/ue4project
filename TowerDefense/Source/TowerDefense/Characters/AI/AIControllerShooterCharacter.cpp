@@ -34,12 +34,10 @@ void AAIControllerShooterCharacter::BeginPlay()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), className, FoundTarget);
 	for (AActor* TActor : FoundTarget)
 	{
-		ATargetLocation* Target = Cast<ATargetLocation>(TActor);
-		if (Target != nullptr)
+		FinallyLocation = Cast<ATargetLocation>(TActor);
+		if (FinallyLocation != nullptr)
 		{
-			SetTargetLocation(Target->GetActorLocation());
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Location %d %d %d"), Target->GetActorLocation().X, Target->GetActorLocation().Y, Target->GetActorLocation().Z));
+			SetTargetLocation(FinallyLocation->GetActorLocation());
 		}
 	}
 }

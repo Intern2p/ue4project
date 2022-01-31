@@ -84,15 +84,25 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 			//CameraBoom->SetWorldRotation(PlayerRot);
 			//FollowCamera->SetWorldRotation(PlayerRot);
 			//ControllerShooterCharacter->TryToFire(ControllerShooterCharacter, Pawn);
-
-		/*	FTimerHandle TimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, 1.f, false, false);
-			*/
-			//AAIControllerShooterCharacter* ControllerShooterCharacter = Cast<AAIControllerShooterCharacter>(GetController());
-			//ControllerShooterCharacter->SetPlayerSighted(false);
+			/*if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("see player")));
+			FTimerHandle TimerHandle;
+			FTimerDelegate  TimerDel;
+			TimerDel.BindUFunction(this, FName("CantSeePlayer"), ControllerShooterCharacter);
+			GetWorldTimerManager().SetTimer(TimerHandle, TimerDel, 5.0f, true);*/
+			
 		}
 	}
 }
+
+//void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter)
+//{
+//	if (GEngine)
+//		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("dont see player")));
+//	//AAIControllerShooterCharacter* ControllerShooterCharacter = Cast<AAIControllerShooterCharacter>(GetController());
+//	ControllerShooterCharacter->SetPlayerSighted(false);
+//	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
+//}
 
 // Called every frame
 void AAIShooterCharacter::Tick(float DeltaTime)

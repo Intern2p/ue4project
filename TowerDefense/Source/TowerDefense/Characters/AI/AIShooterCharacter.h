@@ -9,6 +9,7 @@
 class UPawnSensingComponent;
 class UBehaviorTree;
 class UWidgetComponent;
+class AAIControllerShooterCharacter;
 UCLASS()
 class TOWERDEFENSE_API AAIShooterCharacter : public ABaseCharacter
 {
@@ -38,6 +39,8 @@ public:
 	void OnSeePawn(APawn* Pawn);
 
 private:
+	//void CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter);
+
 	bool bCanSeePlayer;
 	APawn* VisiblePlayer;
 };
