@@ -15,4 +15,14 @@ class TOWERDEFENSE_API ATargetLocation : public ATriggerBox
 	GENERATED_BODY()
 
 	ATargetLocation();
+
+protected:
+
+	virtual void BeginPlay() override;
+
+public:
+
+	UFUNCTION()
+	void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+
 };

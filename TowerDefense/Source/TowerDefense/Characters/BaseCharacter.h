@@ -51,7 +51,6 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Equipment)
 	TSubclassOf<AActor> ArmorClass;
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Health)
 	UHealthComponent* Health;
 
 	UFUNCTION(BlueprintCallable)
@@ -60,14 +59,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float BlockPlayerDamage(float Damage);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	float GetHealth();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	float GetMaxHealth();
-
-	UFUNCTION(BlueprintCallable)
-	void CreateCharacterNewArmor(UClass* ClassArmor);
 
 	UFUNCTION(BlueprintCallable)
 	ACraftingMaterial* GetArmorMaterial();

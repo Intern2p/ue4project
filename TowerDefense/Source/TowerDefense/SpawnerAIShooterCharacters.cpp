@@ -3,7 +3,7 @@
 
 #include "SpawnerAIShooterCharacters.h"
 
-//void RunFirstWave()
+//void RunWave(int Count, float SpawnRate,, TSubClassOf<ACraftingMaterial> Max)
 //{
 //	
 //}

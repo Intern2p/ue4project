@@ -13,6 +13,10 @@ class TOWERDEFENSE_API ASpawnerAIShooterCharacters : public ATriggerBox
 
 public:
 
+	UPROPERTY(EditDefaultsOnly)
+	TMap<FString, int> CountMaterials;
+
+	//TSubClassOf<AIShooterCharacter> ClassArmor;
 	//int CountWaves;
 	//TMap<int, int> CountMaterials;
 };

@@ -26,28 +26,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	class UBehaviorTreeComponent* BehaviorTreeComp;
 
-	/*UPROPERTY(EditDefaultsOnly, Category = "AI")
-	class UBehaviorTree* BehaviorTree;*/
-
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	class UBlackboardComponent* BlackboardComp;
 
-	/*This property is used to find a certain key for our blackboard.
-	We will create the blackboard later in this tutorial*/
 	UPROPERTY(EditDefaultsOnly)
 	FName TargetKey = "Target";
 
 	/*Sets the new sensed target value inside our Blackboard values*/
-	//void SetSensedTarget(APawn* NewTarget);
 	void SetTargetLocation(FVector NewTarget);
 	void SetPlayerSighted(bool isPlayerCanSee);
 
-	//UFUNCTION(BlueprintImplementableEvent)
-	//void TryToFire(AAIControllerShooterCharacter* OwnerController, APawn* ControlledPawn);
 
-protected:
-
-private:
-	
-	//class UBlackboardComponent* BlackboardComp;
 };

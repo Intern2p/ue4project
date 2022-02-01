@@ -17,7 +17,6 @@ class TOWERDEFENSE_API AAIShooterCharacter : public ABaseCharacter
 
 public:
 	AAIShooterCharacter();
-	void Tick(float DeltaTime);
 
 	virtual void BeginPlay() override;
 
@@ -32,6 +31,9 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = HealthBar)
 	UWidgetComponent* HealthWidgetComp;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Drop)
+	TArray<TSubclassOf<ACraftingMaterial>> ClassDropMaterial;
+
 	/*Hearing function - will be executed when we hear a Pawn*/
 //	UFUNCTION()
 	//void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
@@ -45,6 +47,9 @@ public:
 private:
 	UFUNCTION()
 	void CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter);
+
+	UFUNCTION()
+	void SpawnCraftingMaterial();
 
 	bool bCanSeePlayer;
 	APawn* VisiblePlayer;

@@ -11,23 +11,13 @@
 
 AAIControllerShooterCharacter::AAIControllerShooterCharacter(/*FObjectInitializer const& object_initializer*/)
 {
-	/*static ConstructorHelpers::FObjectFinder<UBehaviorTree> obj(TEXT("BehaviorTree'/Game/MyBPClasses/Characters/AI/NPC_BT.NPC_BT'"));
-	if (obj.Succeeded())
-	{
-		BehaviorTree = obj.Object;
-	}*/
 	BehaviorTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComp"));
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
-
-
-	
 }
 
 void AAIControllerShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//RunBehaviorTree(BehaviorTree);
-	//BehaviorTreeComp->StartTree(*BehaviorTree);
 
 	TArray<AActor*> FoundTarget;
 	TSubclassOf<ATargetLocation> className = ATargetLocation::StaticClass();
@@ -56,12 +46,6 @@ void AAIControllerShooterCharacter::OnPossess(APawn* const pawn)
 		BehaviorTreeComp->StartTree(*Char->BehaviorTree);
 	}
 }
-
-//void AAIControllerShooterCharacter::SetSensedTarget(APawn* NewTarget)
-//{
-//	//Set a new target to follow
-//	if (BlackboardComp) BlackboardComp->SetValueAsObject(TargetKey, NewTarget);
-//}
 
 void AAIControllerShooterCharacter::SetTargetLocation(FVector NewTarget)
 {

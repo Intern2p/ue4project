@@ -120,12 +120,6 @@ float ABaseCharacter::GetMaxHealth()
 	return 0;
 }
 
-void ABaseCharacter::CreateCharacterNewArmor(UClass* ClassArmor)
-{
-	ArmorClass = ClassArmor;
-	ArmorWear->CreateNewArmor(ClassArmor);
-}
-
 ACraftingMaterial* ABaseCharacter::GetArmorMaterial()
 {
 	if (ArmorClass)

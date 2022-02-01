@@ -3,21 +3,24 @@
 
 #include "AIShooterCharacter.h"
 #include "Perception/PawnSensingComponent.h"
-#include "TowerDefense/Components/HealthComponent.h"
+#include "Components/WidgetComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "AIControllerShooterCharacter.h"
-#include "TowerDefense/Characters/DefenderCharacter.h"
+#include "Math/UnrealMathUtility.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "TowerDefense/TargetLocation.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/WidgetComponent.h"
+#include "TowerDefense/Characters/DefenderCharacter.h"
+#include "TowerDefense/Components/HealthComponent.h"
+#include "TowerDefense/TargetLocation.h"
 #include "TowerDefense/Widgets/HealthBarWidget.h"
+#include "TowerDefense/SpawnElements/Equipments/Weapon.h"
+#include "TowerDefense/SpawnElements/CraftingMaterial.h"
 
 // Sets default values
 AAIShooterCharacter::AAIShooterCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//Initializing our Pawn Sensing comp and our behavior tree reference
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
@@ -27,7 +30,7 @@ AAIShooterCharacter::AAIShooterCharacter()
 
 	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
 	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -47,6 +50,7 @@ void AAIShooterCharacter::BeginPlay()
 	{
 		HealthBar->SetOwnerCharacter(this);
 	}
+	HealthWidgetComp->SetVisibility(false);
 }
 
 //void AAIShooterCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
@@ -73,6 +77,8 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 		{
 			bCanSeePlayer = true;
 			VisiblePlayer = Pawn;
+			HealthWidgetComp->SetVisibility(true);
+
 			//Updates our target based on what we've heard.
 			ControllerShooterCharacter->SetTargetLocation(Pawn->GetActorLocation());
 			ControllerShooterCharacter->StopMovement();
@@ -81,44 +87,55 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 
 			FVector EndLocation = VisiblePlayer->GetActorLocation();
 			FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), EndLocation);
-			SetActorRotation(PlayerRot);
-			//CameraBoom->SetWorldRotation(PlayerRot);
-			//FollowCamera->SetWorldRotation(PlayerRot);
-			//ControllerShooterCharacter->TryToFire(ControllerShooterCharacter, Pawn);
+			FVector EyeLocation;
+			FRotator EyeRotation;
+			GetActorEyesViewPoint(EyeLocation, EyeRotation);
+			FollowCamera->SetWorldRotation(PlayerRot);
+
+			SetActorRotation(FRotator(GetActorRotation().Pitch, PlayerRot.Yaw, PlayerRot.Roll));
 
 			FTimerHandle TimerHandle;
 			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("CantSeePlayer"), ControllerShooterCharacter);
 			GetWorldTimerManager().SetTimer(TimerHandle, TimerDel, 2.f, false);
+			
 		}
 	}
 }
 
 void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter)
 {
+	HealthWidgetComp->SetVisibility(false);
 	ControllerShooterCharacter->SetPlayerSighted(false);
 	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
 }
 
-// Called every frame
-void AAIShooterCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	/*if (bCanSeePlayer && VisiblePlayer != nullptr) {
 
-		FVector EndLocation = VisiblePlayer->GetActorLocation();
-		FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), EndLocation);
-		FRotator NewRot = FMath::RInterpTo(GetMesh()->GetComponentRotation(), PlayerRot, DeltaTime, 2);
-		SetActorRotation(PlayerRot);
-	}*/
-}
 
 void AAIShooterCharacter::Die()
 {
 	Super::Die();
+	WeaponPickup->SetLifeSpan(5.f);
+	SetLifeSpan(5.f);
+	SpawnCraftingMaterial();
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetSimulatePhysics(true);
+	
 	// Get the animation object for the die
 	/*if (AnimDieInstance != nullptr)
 	{
 		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
 	}*/
+}
+
+void AAIShooterCharacter::SpawnCraftingMaterial()
+{
+	if ( ClassDropMaterial.Num() > 0 )
+	{
+		int StartRange = 0;
+		int EndRange = ClassDropMaterial.Num() - 1;
+
+		int index = FMath::RandRange(StartRange, EndRange);
+		GetWorld()->SpawnActor<ACraftingMaterial>(ClassDropMaterial[index], GetActorLocation(), GetActorRotation());
+	}
 }

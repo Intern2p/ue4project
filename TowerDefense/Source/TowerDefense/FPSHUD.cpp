@@ -20,6 +20,7 @@ void AFPSHUD::BeginPlay()
         }
     }
 }
+
 void AFPSHUD::DrawHUD()
 {
     Super::DrawHUD();
@@ -41,4 +42,10 @@ void AFPSHUD::DrawHUD()
         DrawRect(FColor::White, Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f, 2.f, 2.f);
        // DrawCircle(GetWorld(), GetOwner()->GetActorLocation(), XVector, YVector, DebugLineColor, GetPolarGridElement(i, j, k).X, 100, false, -1.0f, LineDepthInt8, LineThickness);
     }
+}
+
+void AFPSHUD::ShowGameOverWidget()
+{
+    UUserWidget* createdWidget = CreateWidget<UUserWidget>(GetWorld(), GameOverWidget);
+    createdWidget->AddToViewport();
 }

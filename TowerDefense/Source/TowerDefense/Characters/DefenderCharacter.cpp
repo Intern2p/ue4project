@@ -11,10 +11,11 @@
 #include "Components/WidgetComponent.h"
 #include "TowerDefense/Widgets/PlayerUIWidget.h"
 #include "TowerDefense/FPSHUD.h"
-#include "TowerDefense/SpawnElements/CraftingMaterials/Metal.h"
+#include "TowerDefense/SpawnElements/Equipments/Armor.h"
 #include "TowerDefense/TowerDefender_GameMode.h"
 
 #define AddToInventoryToolTip "Added to Inventory"
+#define CreateArmorToolTip "New Armor Was Created"
 
 // Sets default values
 ADefenderCharacter::ADefenderCharacter()
@@ -49,8 +50,8 @@ void ADefenderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ADefenderCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ADefenderCharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ADefenderCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADefenderCharacter::MoveRight);
@@ -70,6 +71,24 @@ void ADefenderCharacter::MoveForward(float Axis)
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, Axis);
+	}
+}
+
+void ADefenderCharacter::Jump()
+{
+	if (isAlive)
+	{
+		bPressedJump = true;
+		JumpKeyHoldTime = 0.0f;
+	}
+}
+
+void ADefenderCharacter::StopJumping()
+{
+	if (isAlive)
+	{
+		bPressedJump = false;
+		ResetJumpState();
 	}
 }
 
@@ -93,7 +112,7 @@ void ADefenderCharacter::PickUpItem()
 	FVector EyeLocation = camManager->GetCameraLocation();
 	FVector ForwardVector = camManager->GetCameraRotation().Vector();
 
-	FVector TraceEnd = EyeLocation + ForwardVector;
+	FVector TraceEnd = EyeLocation + ForwardVector*300;
 
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -120,7 +139,7 @@ void ADefenderCharacter::PickUpItem()
 
 void ADefenderCharacter::ClearToolTip()
 {	
-	if (ToolTip == AddToInventoryToolTip)
+	if (ToolTip == AddToInventoryToolTip || ToolTip == CreateArmorToolTip)
 		ToolTip.Empty();
 }
 
@@ -142,4 +161,15 @@ void ADefenderCharacter::Respawn()
 	SetActorLocation(RespawnLocation);
 	isAlive = true;
 	//Health->Regenerate();
+}
+
+void ADefenderCharacter::CreateCharacterNewArmor(UClass* ClassArmor)
+{
+	ArmorClass = ClassArmor;
+	ArmorWear->CreateNewArmor(ClassArmor);
+
+	FTimerHandle TimerHandle;
+	FTimerDelegate TimerDel;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::ClearToolTip, 3.f, false);
+	ToolTip = CreateArmorToolTip;
 }

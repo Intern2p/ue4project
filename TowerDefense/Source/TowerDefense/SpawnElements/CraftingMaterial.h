@@ -17,6 +17,9 @@ public:
 	// Sets default values for this actor's properties
 	ACraftingMaterial();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = "StaticMesh")
 		UStaticMeshComponent* StaticMesh;
 

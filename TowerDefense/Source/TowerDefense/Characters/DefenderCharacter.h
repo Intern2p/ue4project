@@ -32,6 +32,8 @@ public:
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
+	void Jump();
+	void StopJumping();
 	void PickUpItem();
 
 protected:
@@ -59,6 +61,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ClearToolTip();
+
+	UFUNCTION(BlueprintCallable)
+	void CreateCharacterNewArmor(UClass* ClassArmor);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

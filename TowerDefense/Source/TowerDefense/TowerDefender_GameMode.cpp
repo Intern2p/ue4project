@@ -18,5 +18,6 @@ ATowerDefender_GameMode::ATowerDefender_GameMode()
 	{
 		HUDClass = FPSHUDBPClass.Class;
 	}
+
 }
 

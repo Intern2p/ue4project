@@ -25,6 +25,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<class UUserWidget>> AllUIWidgets;
 
+	UPROPERTY(EditDefaultsOnly)
+	class TSubclassOf<UUserWidget> GameOverWidget;
+
+	UFUNCTION()
+	void ShowGameOverWidget();
+
 	// Primary draw call for the HUD.
 	virtual void DrawHUD() override;
 
