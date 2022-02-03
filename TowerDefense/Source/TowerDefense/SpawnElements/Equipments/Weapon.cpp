@@ -13,7 +13,8 @@ AWeapon::AWeapon()
 {
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	RootComponent = MeshComp;
-	MeshComp->SetupAttachment(RootComponent);
+	//MeshComp->SetupAttachment(SphereCollider);
+	SphereCollider->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

@@ -17,7 +17,8 @@ ASpawnElement::ASpawnElement()
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("BoxCollider"));
 	SphereCollider->InitSphereRadius(330.0f);
 	SphereCollider->SetCollisionProfileName("Trigger");
-	SphereCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	RootComponent = SphereCollider;
+	//SphereCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 // Called when the game starts or when spawned

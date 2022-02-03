@@ -8,8 +8,8 @@
 AMetal::AMetal()
 {
 	// STATS FOR ARMOR 
-	ArmorBlockingDamage = 30.f;
-	ArmorNecessaryCountMaterials = 15;
+	ArmorBlockingDamage = 25.f;
+	ArmorNecessaryCountMaterials = 3;
 }
 
 float AMetal::GetArmorBlockingDamage()
@@ -29,7 +29,7 @@ void AMetal::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inve
 		Inventory->AddCountMaterial(1, AMetal::StaticClass()->GetName());
 		if (Inventory->GetCountMaterial(AMetal::StaticClass()->GetName()) >= ArmorNecessaryCountMaterials)
 		{
-			Player->CreateCharacterNewArmor(this->GetClass());
+			Player->CreateCharacterNewArmor(AMetal::StaticClass());
 		}
 	}
 }

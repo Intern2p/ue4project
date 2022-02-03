@@ -9,7 +9,7 @@ AStone::AStone()
 {
 	// STATS FOR ARMOR 
 	ArmorBlockingDamage = 20.f;
-	ArmorNecessaryCountMaterials = 10;
+	ArmorNecessaryCountMaterials = 5;
 }
 
 float AStone::GetArmorBlockingDamage()
@@ -29,7 +29,7 @@ void AStone::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inve
 		Inventory->AddCountMaterial(1, AStone::StaticClass()->GetName());
 		if (Inventory->GetCountMaterial(AStone::StaticClass()->GetName()) >= ArmorNecessaryCountMaterials)
 		{
-			Player->CreateCharacterNewArmor(this->GetClass());
+			Player->CreateCharacterNewArmor(AStone::StaticClass());
 		}
 	}
 }

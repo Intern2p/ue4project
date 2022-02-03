@@ -150,17 +150,13 @@ void ADefenderCharacter::Die()
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDel;
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::Respawn, 5.f, false);
-	// Get the animation object for the die
-	/*if (AnimDieInstance != nullptr)
-	{
-		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
-	}*/
+
 }
 void ADefenderCharacter::Respawn()
 {
 	SetActorLocation(RespawnLocation);
 	isAlive = true;
-	//Health->Regenerate();
+	Health->Regenerate();
 }
 
 void ADefenderCharacter::CreateCharacterNewArmor(UClass* ClassArmor)
