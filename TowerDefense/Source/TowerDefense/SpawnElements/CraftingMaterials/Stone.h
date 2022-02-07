@@ -20,6 +20,9 @@ private:
 	int ArmorNecessaryCountMaterials;
 
 public:
+	UFUNCTION()
+	FString GetMaterialName();
+
 	float GetArmorBlockingDamage() override;
 	int GetArmorNecessaryCountMaterials() override;
 	void PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory) override;

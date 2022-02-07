@@ -8,37 +8,25 @@
 
 AArmor::AArmor()
 {
-	if (ClassMaterial)
-		Material = GetWorld()->SpawnActor<ACraftingMaterial>(ClassMaterial);
+	MaterialName = "";
+	BlockDamageValue = 0;
 }
 
 float AArmor::BlockDamage(float Damage)
 {
-	if (ClassMaterial)
-	{
-		Damage -= Material->GetArmorBlockingDamage();
-	}
+	Damage -= BlockDamageValue;
 	return Damage;
 }
 
 void AArmor::CreateNewArmor(UClass* NewMaterial)
 {
-	ClassMaterial = NewMaterial;
-	if (ClassMaterial)
-		Material = GetWorld()->SpawnActor<ACraftingMaterial>(ClassMaterial);
-}
+	if (NewMaterial)
+		Material = GetWorld()->SpawnActor<ACraftingMaterial>(NewMaterial);
 
-ACraftingMaterial* AArmor::GetMaterial()
-{
-	if (ClassMaterial)
-		return Material;
-	return nullptr;
-}
-
-
-float AArmor::GetBlockingDamage()
-{
-	if (ClassMaterial)
-		return Material->GetArmorBlockingDamage();
-	return 0;
+	if (Material->GetArmorBlockingDamage() > BlockDamageValue)
+	{
+		BlockDamageValue = Material->GetArmorBlockingDamage();
+		MaterialName = Material->GetMaterialName();
+	}
+	Material->Destroy();
 }

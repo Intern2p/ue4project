@@ -20,6 +20,7 @@ private:
 	int ArmorNecessaryCountMaterials;
 
 public:
+	FString GetMaterialName() override;
 	float GetArmorBlockingDamage() override;
 	int GetArmorNecessaryCountMaterials() override;
 

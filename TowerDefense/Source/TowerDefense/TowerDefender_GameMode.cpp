@@ -45,66 +45,57 @@ void ATowerDefender_GameMode::BeginPlay()
 		}
 	}
 
-	/*Get Target Location*/
-	TSubclassOf<ATargetLocation> classNameLocation = ATargetLocation::StaticClass();
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), classNameLocation, FoundTarget);
-	for (AActor* TActor : FoundTarget)
-	{
-		FinallyLocation = Cast<ATargetLocation>(TActor);	
-	}
-
 	PlayerHUD = Cast<AFPSHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD());
 
 	/* Start Waves */
 	if (Waves.Num() > 0)
 	{
-		FTimerHandle TimerHandle;
-		FTimerDelegate TimerDel;
-		GetWorldTimerManager().SetTimer(TimerHandle, this, &ATowerDefender_GameMode::StartGame, Waves[IndexCurrentWave].BreakTimeBefore, false);
+		GetWorldTimerManager().SetTimer(TimerHandleWaveBreak, this, &ATowerDefender_GameMode::StartGame, Waves[IndexCurrentWave].BreakTimeBefore, false);
 	}
 }
 
 void ATowerDefender_GameMode::StartGame()
 {
-	
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Wave num %d"), IndexCurrentWave));
-	IndexCurrentMob = 0;
-
-	if (IndexCurrentWave >= Waves.Num() - 1)
+	if (Waves.IsValidIndex(IndexCurrentWave))
 	{
-		return;
-	}
+		IndexCurrentMob = 0;
 
-	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDel;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &ATowerDefender_GameMode::StartWave, Waves[IndexCurrentWave].BreakTimeBefore, false);
+		if (IndexCurrentWave >= Waves.Num() - 1)
+			return;
+
+		if (GetWorldTimerManager().IsTimerActive(TimerHandleWaveBreak))
+			GetWorldTimerManager().ClearTimer(TimerHandleWaveBreak);
+
+		GetWorldTimerManager().SetTimer(TimerHandleWaveBreak, this, &ATowerDefender_GameMode::StartWave, Waves[IndexCurrentWave].BreakTimeBefore, false);
+	}
 }
 
 /* recursion */
 void ATowerDefender_GameMode::StartWave()
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Mob num %d"), IndexCurrentMob));
-	if (IndexCurrentMob == 0)
-		ShowWidgetWaveBegin();
-
-	if (IndexCurrentMob >= Waves[IndexCurrentWave].Mobs.Num() - 1)
+	if (Waves.IsValidIndex(IndexCurrentWave))
 	{
-		IndexCurrentWave++;
-		StartGame();
-		return;
+		if (IndexCurrentMob == 0)
+			ShowWidgetWaveBegin();
+
+		if (IndexCurrentMob >= Waves[IndexCurrentWave].Mobs.Num() - 1)
+		{
+			IndexCurrentWave++;
+			StartGame();
+			return;
+		}
+
+		TSubclassOf<AAIShooterCharacter> Mob = Waves[IndexCurrentWave].Mobs[IndexCurrentMob];
+		IndexCurrentMob++;
+
+		if (Mob)
+			SpawnMob(Mob);
+
+		if (GetWorldTimerManager().IsTimerActive(TimerHandleSpawnMob))
+			GetWorldTimerManager().ClearTimer(TimerHandleSpawnMob);
+
+		GetWorldTimerManager().SetTimer(TimerHandleSpawnMob, this, &ATowerDefender_GameMode::StartWave, Waves[IndexCurrentWave].FrequencySpawn, false);
 	}
-
-	TSubclassOf<AAIShooterCharacter> Mob = Waves[IndexCurrentWave].Mobs[IndexCurrentMob]; 
-	IndexCurrentMob++;
-
-	if (Mob)
-		SpawnMob(Mob);
-
-	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDel;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &ATowerDefender_GameMode::StartWave, Waves[IndexCurrentWave].FrequencySpawn, false);
 }
 
 void ATowerDefender_GameMode::SpawnMob(TSubclassOf<AAIShooterCharacter> ClassChar)
@@ -115,13 +106,8 @@ void ATowerDefender_GameMode::SpawnMob(TSubclassOf<AAIShooterCharacter> ClassCha
 		int EndRange = Spawners.Num() - 1;
 
 		int index = FMath::RandRange(StartRange, EndRange);
-		AAIShooterCharacter* Char = GetWorld()->SpawnActor<AAIShooterCharacter>(ClassChar, Spawners[index]->GetActorLocation(), Spawners[index]->GetActorRotation());
-		if (FinallyLocation != nullptr)
-		{
-			AAIControllerShooterCharacter* AIController = Cast<AAIControllerShooterCharacter>(Char->GetController());
-			AIController->FinallyLocation = FinallyLocation;
-			AIController->SetTargetLocation(FinallyLocation->GetActorLocation());
-		}
+
+		Spawners[index]->SpawnMob(ClassChar);
 	}
 }
 

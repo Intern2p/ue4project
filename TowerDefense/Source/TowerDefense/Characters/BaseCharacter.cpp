@@ -82,12 +82,6 @@ void ABaseCharacter::OnFire()
 
 void ABaseCharacter::Die() {
 	isAlive = false;
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("player death")));
-	//WeaponPickup->SetLifeSpan(7.f);
-	//SetLifeSpan(7.f);
-	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	//GetMesh()->SetSimulatePhysics(true);
 }
 
 float ABaseCharacter::BlockPlayerDamage(float Damage)
@@ -120,17 +114,17 @@ float ABaseCharacter::GetMaxHealth()
 	return 0;
 }
 
-ACraftingMaterial* ABaseCharacter::GetArmorMaterial()
+FString ABaseCharacter::GetArmorMaterial()
 {
 	if (ArmorClass)
-		return ArmorWear->GetMaterial();
-	return nullptr;
+		return ArmorWear->MaterialName;
+	return "";
 }
 
 float ABaseCharacter::GetArmorBlockingDamage()
 {
 	if (ArmorClass)
-		return ArmorWear->GetBlockingDamage();
+		return ArmorWear->BlockDamageValue;
 	return 0;
 }
 

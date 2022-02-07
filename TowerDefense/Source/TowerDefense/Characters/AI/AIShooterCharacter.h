@@ -34,9 +34,8 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Drop)
 	TArray<TSubclassOf<ACraftingMaterial>> ClassDropMaterial;
 
-	/*Hearing function - will be executed when we hear a Pawn*/
-//	UFUNCTION()
-	//void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GamePlay)
+	bool bInFinallyLocation;
 
 	UFUNCTION(BlueprintCallable)
 	void Die() override;

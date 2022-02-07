@@ -6,9 +6,6 @@
 #include "Engine/TriggerBox.h"
 #include "TargetLocation.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOWERDEFENSE_API ATargetLocation : public ATriggerBox
 {
@@ -28,6 +25,9 @@ public:
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Destruct)
 	float PercentDestruction;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Destruct)
+	int CountEnemiesAtLocation;
 
 	UFUNCTION()
 	void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);

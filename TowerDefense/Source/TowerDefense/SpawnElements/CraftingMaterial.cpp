@@ -26,6 +26,7 @@ void ACraftingMaterial::Tick(float DeltaTime)
 	SetActorLocation(StaticMesh->GetComponentLocation());
 }
 
+FString ACraftingMaterial::GetMaterialName() { return FString(); }
 float ACraftingMaterial::GetArmorBlockingDamage() { return 0.f; };
 int ACraftingMaterial::GetArmorNecessaryCountMaterials() { return 0; };
 void ACraftingMaterial::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory) {};

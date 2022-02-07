@@ -8,7 +8,7 @@
 AMetal::AMetal()
 {
 	// STATS FOR ARMOR 
-	ArmorBlockingDamage = 30.f;
+	ArmorBlockingDamage = 25.f;
 	ArmorNecessaryCountMaterials = 3;
 }
 
@@ -22,6 +22,11 @@ int AMetal::GetArmorNecessaryCountMaterials()
 	return ArmorNecessaryCountMaterials;
 }
 
+FString AMetal::GetMaterialName()
+{
+	return AMetal::StaticClass()->GetName();
+}
+
 void AMetal::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory)
 {
 	if (Inventory)
@@ -30,6 +35,7 @@ void AMetal::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inve
 		if (Inventory->GetCountMaterial(AMetal::StaticClass()->GetName()) >= ArmorNecessaryCountMaterials)
 		{
 			Player->CreateCharacterNewArmor(AMetal::StaticClass());
+			Inventory->AddCountMaterial(ArmorNecessaryCountMaterials*(-1), AMetal::StaticClass()->GetName());
 		}
 	}
 }

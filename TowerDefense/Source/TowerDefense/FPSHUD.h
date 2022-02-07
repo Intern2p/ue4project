@@ -41,8 +41,7 @@ public:
 	virtual void DrawHUD() override;
 
 private:
-
-	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandleStageWave;
 	UUserWidget* WidgetStageWave;
 
 	UFUNCTION()

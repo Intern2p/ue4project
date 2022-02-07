@@ -16,7 +16,7 @@ struct FKeyWavesMap
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
 		TArray<TSubclassOf<AAIShooterCharacter>> Mobs;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
@@ -50,8 +50,10 @@ protected:
 private:
 	TArray<ASpawnerAIShooterCharacters*> Spawners;
 
-	ATargetLocation* FinallyLocation;
 	AFPSHUD* PlayerHUD;
+
+	FTimerHandle TimerHandleWaveBreak;
+	FTimerHandle TimerHandleSpawnMob;
 
 	UFUNCTION()
 	void StartGame();

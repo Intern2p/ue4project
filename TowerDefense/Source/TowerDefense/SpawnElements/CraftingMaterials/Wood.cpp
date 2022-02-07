@@ -9,7 +9,7 @@ AWood::AWood()
 {
 	// STATS FOR ARMOR 
 	ArmorBlockingDamage = 10.f;
-	ArmorNecessaryCountMaterials = 10;
+	ArmorNecessaryCountMaterials = 7;
 }
 
 float AWood::GetArmorBlockingDamage()
@@ -22,6 +22,11 @@ int AWood::GetArmorNecessaryCountMaterials()
 	return ArmorNecessaryCountMaterials;
 }
 
+FString AWood::GetMaterialName()
+{
+	return AWood::StaticClass()->GetName();
+}
+
 void AWood::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory)
 {
 	if (Inventory)
@@ -30,6 +35,8 @@ void AWood::PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inven
 		if (Inventory->GetCountMaterial(AWood::StaticClass()->GetName()) >= ArmorNecessaryCountMaterials)
 		{
 			Player->CreateCharacterNewArmor(AWood::StaticClass());
+			Inventory->AddCountMaterial(ArmorNecessaryCountMaterials * (-1), AWood::StaticClass()->GetName());
+
 		}
 	}
 }

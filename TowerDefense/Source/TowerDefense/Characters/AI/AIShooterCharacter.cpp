@@ -27,6 +27,7 @@ AAIShooterCharacter::AAIShooterCharacter()
 	BehaviorTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("BehaviorTreeReference"));
 
 	bCanSeePlayer = false;
+	bInFinallyLocation = false;
 
 	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
 	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -37,11 +38,8 @@ AAIShooterCharacter::AAIShooterCharacter()
 void AAIShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//isAlive = true;
 	if (PawnSensingComp)
 	{
-		//Registering the delegate which will fire when we hear something
-		//PawnSensingComp->OnHearNoise.AddDynamic(this, &AAIShooterCharacter::OnHearNoise);
 		PawnSensingComp->OnSeePawn.AddDynamic(this, &AAIShooterCharacter::OnSeePawn);
 	}
 
@@ -53,18 +51,7 @@ void AAIShooterCharacter::BeginPlay()
 	HealthWidgetComp->SetVisibility(false);
 }
 
-//void AAIShooterCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
-//{
-//
-//	//AMyAIController* Con = Cast<AMyAIController>(GetController());
-//
-//	//We don't want to hear ourselves
-//	//if (Con && PawnInstigator != this)
-//	//{
-//		//Updates our target based on what we've heard.
-//		//Con->SetSensedTarget(PawnInstigator);
-//	//}
-//}
+
 void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 {
 	if (Pawn != this && isAlive)
@@ -110,22 +97,26 @@ void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* Controlle
 	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
 }
 
-
-
 void AAIShooterCharacter::Die()
 {
 	Super::Die();
 	WeaponPickup->SetLifeSpan(5.f);
+
+	if (bInFinallyLocation)
+	{
+		AAIControllerShooterCharacter* ControllerShooterCharacter = Cast<AAIControllerShooterCharacter>(GetController());
+		if (ControllerShooterCharacter)
+		{
+			ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation = FMath::Clamp(ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation - 1, 0, 9999);
+			if (ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation <= 0)
+				ControllerShooterCharacter->FinallyLocation->isDestruct = false;
+		}
+	}
+
 	SetLifeSpan(5.f);
 	SpawnCraftingMaterial();
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
-	
-	// Get the animation object for the die
-	/*if (AnimDieInstance != nullptr)
-	{
-		AnimDieInstance->Montage_Play(FireAnimation, 1.f);
-	}*/
 }
 
 void AAIShooterCharacter::SpawnCraftingMaterial()

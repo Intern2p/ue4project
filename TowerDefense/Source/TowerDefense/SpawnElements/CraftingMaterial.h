@@ -23,6 +23,7 @@ public:
 	UPROPERTY(EditAnyWhere, BluePrintReadWrite, Category = "StaticMesh")
 		UStaticMeshComponent* StaticMesh;
 
+	virtual FString GetMaterialName();
 	virtual float GetArmorBlockingDamage();
 	virtual int GetArmorNecessaryCountMaterials();
 	virtual void PickUpElement(ADefenderCharacter* Player, UInventoryComponent* Inventory);

@@ -6,17 +6,22 @@
 #include "Engine/TriggerBox.h"
 #include "SpawnerAIShooterCharacters.generated.h"
 
+class ATargetLocation;
+class AAIShooterCharacter;
 UCLASS()
 class TOWERDEFENSE_API ASpawnerAIShooterCharacters : public ATriggerBox
 {
 	GENERATED_BODY()
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 public:
 
-	UPROPERTY(EditDefaultsOnly)
-	TMap<FString, int> CountMaterials;
+	UFUNCTION()
+	void SpawnMob(TSubclassOf<AAIShooterCharacter> ClassChar);
 
-	//TSubClassOf<AIShooterCharacter> ClassArmor;
-	//int CountWaves;
-	//TMap<int, int> CountMaterials;
+private:
+	ATargetLocation* FinallyLocation;
 };

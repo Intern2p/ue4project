@@ -15,10 +15,9 @@ class TOWERDEFENSE_API AAIControllerShooterCharacter : public AAIController
 	GENERATED_BODY()
 	
 public:
-	AAIControllerShooterCharacter(/*FObjectInitializer const& object_initializer = FObjectInitializer::Get()*/);
+	AAIControllerShooterCharacter();
 	void BeginPlay() override;
 	void OnPossess(APawn* const pawn) override;
-	//class UBlackboardComponent* get_blackboard() const;
 
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	ATargetLocation* FinallyLocation;
@@ -35,6 +34,5 @@ public:
 	/*Sets the new sensed target value inside our Blackboard values*/
 	void SetTargetLocation(FVector NewTarget);
 	void SetPlayerSighted(bool isPlayerCanSee);
-
 
 };

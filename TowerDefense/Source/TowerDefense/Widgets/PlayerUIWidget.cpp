@@ -34,20 +34,6 @@ void UPlayerUIWidget::NativeConstruct()
 	VisibleDestructionBox = ESlateVisibility::Hidden;
 }
 
-//FText UPlayerUIWidget::SetToolTip()
-//{
-//	UWorld* World = GetWorld();
-//	if (World)
-//	{
-//		ATowerDefender_GameMode* GameMode = Cast<ATowerDefender_GameMode>(World->GetAuthGameMode());
-//		if (GameMode)
-//		{
-//			return FText::FromString(GameMode->ToolTipText);
-//		}
-//	}
-//	return FText();
-//}
-
 void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -74,9 +60,9 @@ void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 
 		/*Armor*/
-		if (OwnerCharacter->ArmorClass && OwnerCharacter->GetArmorMaterial())
+		if (OwnerCharacter->ArmorClass)
 		{
-			TypeArmorLabel->SetText(FText::FromString(OwnerCharacter->GetArmorMaterial()->GetClass()->GetName()));
+			TypeArmorLabel->SetText(FText::FromString(OwnerCharacter->GetArmorMaterial()));
 		}
 		else
 		{

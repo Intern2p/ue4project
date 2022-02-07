@@ -56,13 +56,19 @@ void AFPSHUD::ShowStageWaveWidget()
     { 
         if (!WidgetStageWave)
             WidgetStageWave = CreateWidget<UUserWidget>(GetWorld(), NumStageWidget);
-        WidgetStageWave->AddToViewport();
 
-        GetWorldTimerManager().SetTimer(TimerHandle, this, &AFPSHUD::HideStageWaveWidget, 2, false);
+        if (!WidgetStageWave->IsInViewport())
+            WidgetStageWave->AddToViewport();
+
+        if (TimerHandleStageWave.IsValid() && GetWorldTimerManager().IsTimerActive(TimerHandleStageWave))
+            GetWorldTimerManager().ClearTimer(TimerHandleStageWave);
+
+        GetWorldTimerManager().SetTimer(TimerHandleStageWave, this, &AFPSHUD::HideStageWaveWidget, 2, false);
     }
 }
 
 void AFPSHUD::HideStageWaveWidget()
 {
-    WidgetStageWave->RemoveFromViewport();
+    if (WidgetStageWave && WidgetStageWave->IsInViewport())
+        WidgetStageWave->RemoveFromViewport();
 }

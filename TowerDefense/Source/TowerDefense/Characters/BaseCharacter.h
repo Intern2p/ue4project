@@ -66,7 +66,7 @@ public:
 	float GetMaxHealth();
 
 	UFUNCTION(BlueprintCallable)
-	ACraftingMaterial* GetArmorMaterial();
+	FString GetArmorMaterial();
 
 	UFUNCTION(BlueprintCallable)
 	float GetArmorBlockingDamage();

@@ -16,8 +16,11 @@ class TOWERDEFENSE_API AArmor : public ACharacterEquipment
 public:
 	AArmor();
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = ArmorMaterial)
-	TSubclassOf<ACraftingMaterial> ClassMaterial;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = MaterialStats)
+	float BlockDamageValue;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = MaterialStats)
+	FString MaterialName;
 
 	UFUNCTION()
 	void CreateNewArmor(UClass* NewMaterial);
@@ -25,11 +28,6 @@ public:
 	UFUNCTION()
 	float BlockDamage(float Damage);
 
-	UFUNCTION()
-	ACraftingMaterial* GetMaterial();
-
-	UFUNCTION()
-	float GetBlockingDamage();
 
 private:
 	ACraftingMaterial* Material;

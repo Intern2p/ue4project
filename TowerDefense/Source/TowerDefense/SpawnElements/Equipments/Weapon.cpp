@@ -13,7 +13,7 @@ AWeapon::AWeapon()
 {
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	RootComponent = MeshComp;
-	MeshComp->SetupAttachment(RootComponent);
+	//MeshComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -25,8 +25,6 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Fire()
 {
-	//Trace the world, from pawn eyes to croshair location
-	 
 	AActor* MyOwner = GetOwner();
 		
 	if (MyOwner)
@@ -34,7 +32,6 @@ void AWeapon::Fire()
 		ABaseCharacter* MyCharacter = Cast<ABaseCharacter>(MyOwner);
 		if (MyCharacter)
 		{
-			//float BulletSpread = 0.5f;
 			FVector EyeLocation;
 			FRotator EyeRotation;
 			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
@@ -56,19 +53,10 @@ void AWeapon::Fire()
 			EPhysicalSurface SurfaceType = SurfaceType_Default;
 			FHitResult Hit;
 			//DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Green, true);
-			if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, /*COLLISION_WEAPON*/ECC_Visibility, QueryParams))
+			if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
 			{
 				if (Hit.bBlockingHit)
 				{
-					/*if (GEngine)
-					{
-						GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hiting %s"), *Hit.GetActor()->GetName()));
-
-						GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point %s"), *Hit.ImpactPoint.ToString()));
-
-						GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Normal %s"), *Hit.ImpactNormal.ToString()));
-					}*/
-
 					AActor* HitActor = Hit.GetActor();
 
 					UGameplayStatics::ApplyPointDamage(HitActor, Damage, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);

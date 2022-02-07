@@ -14,11 +14,6 @@ class TOWERDEFENSE_API UPlayerUIWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-public:
-	
-	//void SetInventory(UInventoryComponent* CharInventory) { Inventory = CharInventory; }
-	//void SetOwnerCharacter(ADefenderCharacter* Char, UInventoryComponent* CharInventory) { OwnerCharacter = Char; Inventory = CharInventory }
-
 protected:
 
 	virtual void NativeConstruct() override;

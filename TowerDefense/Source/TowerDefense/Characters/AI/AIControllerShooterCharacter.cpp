@@ -9,7 +9,7 @@
 #include "TowerDefense/TargetLocation.h"
 #include "Kismet/GameplayStatics.h"
 
-AAIControllerShooterCharacter::AAIControllerShooterCharacter(/*FObjectInitializer const& object_initializer*/)
+AAIControllerShooterCharacter::AAIControllerShooterCharacter()
 {
 	BehaviorTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComp"));
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
@@ -50,8 +50,6 @@ void AAIControllerShooterCharacter::OnPossess(APawn* const pawn)
 void AAIControllerShooterCharacter::SetTargetLocation(FVector NewTarget)
 {
 	if (BlackboardComp) BlackboardComp->SetValueAsVector("Location", NewTarget);
-	/*if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Location %d %d %d"), NewTarget.X, NewTarget.Y, NewTarget.Z));*/
 }
 
 void AAIControllerShooterCharacter::SetPlayerSighted(bool isPlayerCanSee)
