@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CraftingMaterial.h"
 #include "TowerDefense/Characters/DefenderCharacter.h"
 #include "TowerDefense/Components/InventoryComponent.h"

@@ -38,6 +38,7 @@ void ABaseCharacter::BeginPlay()
 
 	isAlive = true;
 	
+	/* Spawn Weapon */
 	if (WeaponClass)
 	{
 		bHasWeapon = true;
@@ -62,6 +63,7 @@ void ABaseCharacter::BeginPlay()
 		bHasWeapon = false;
 	}
 
+	/* Spawn Armor (in future will has mesh) */
 	ArmorWear = GetWorld()->SpawnActor<AArmor>();
 	if (ArmorClass)
 	{
@@ -70,13 +72,11 @@ void ABaseCharacter::BeginPlay()
 
 }
 
-// Called every frame
 void ABaseCharacter::OnFire()
 {
 	if (WeaponClass != nullptr && isAlive)
 	{
 		WeaponPickup->Fire();
-
 	}
 }
 

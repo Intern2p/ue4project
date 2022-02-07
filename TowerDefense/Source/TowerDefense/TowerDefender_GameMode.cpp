@@ -66,11 +66,12 @@ void ATowerDefender_GameMode::StartGame()
 		if (GetWorldTimerManager().IsTimerActive(TimerHandleWaveBreak))
 			GetWorldTimerManager().ClearTimer(TimerHandleWaveBreak);
 
+		/* start wave after break time */
 		GetWorldTimerManager().SetTimer(TimerHandleWaveBreak, this, &ATowerDefender_GameMode::StartWave, Waves[IndexCurrentWave].BreakTimeBefore, false);
 	}
 }
 
-/* recursion */
+/* recursion (spawn all npc in current wave) */
 void ATowerDefender_GameMode::StartWave()
 {
 	if (Waves.IsValidIndex(IndexCurrentWave))

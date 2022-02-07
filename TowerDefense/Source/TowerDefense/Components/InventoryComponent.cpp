@@ -26,6 +26,7 @@ int UInventoryComponent::GetCountMaterial(FString MaterialName)
 
 void UInventoryComponent::AddCountMaterial(int Count, FString MaterialName)
 {
+	/* Add count material by name */
 	if (CountMaterials.Contains(MaterialName))
 	{
 		CountMaterials[MaterialName] += Count;

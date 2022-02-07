@@ -72,13 +72,13 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 
 			ControllerShooterCharacter->SetPlayerSighted(true);
 
+			/* Rotate AI to player */
 			FVector EndLocation = VisiblePlayer->GetActorLocation();
 			FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), EndLocation);
 			FVector EyeLocation;
 			FRotator EyeRotation;
 			GetActorEyesViewPoint(EyeLocation, EyeRotation);
 			FollowCamera->SetWorldRotation(PlayerRot);
-
 			SetActorRotation(FRotator(GetActorRotation().Pitch, PlayerRot.Yaw, PlayerRot.Roll));
 
 			FTimerHandle TimerHandle;
@@ -92,6 +92,7 @@ void AAIShooterCharacter::OnSeePawn(APawn* Pawn)
 
 void AAIShooterCharacter::CantSeePlayer(AAIControllerShooterCharacter* ControllerShooterCharacter)
 {
+	/* AI loses the opportunity to see player */
 	HealthWidgetComp->SetVisibility(false);
 	ControllerShooterCharacter->SetPlayerSighted(false);
 	ControllerShooterCharacter->SetTargetLocation(ControllerShooterCharacter->FinallyLocation->GetActorLocation());
@@ -102,12 +103,14 @@ void AAIShooterCharacter::Die()
 	Super::Die();
 	WeaponPickup->SetLifeSpan(5.f);
 
+	/* If player die */
 	if (bInFinallyLocation)
 	{
 		AAIControllerShooterCharacter* ControllerShooterCharacter = Cast<AAIControllerShooterCharacter>(GetController());
 		if (ControllerShooterCharacter)
 		{
 			ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation = FMath::Clamp(ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation - 1, 0, 9999);
+			/* If last player die */
 			if (ControllerShooterCharacter->FinallyLocation->CountEnemiesAtLocation <= 0)
 				ControllerShooterCharacter->FinallyLocation->isDestruct = false;
 		}
@@ -121,6 +124,7 @@ void AAIShooterCharacter::Die()
 
 void AAIShooterCharacter::SpawnCraftingMaterial()
 {
+	/* spawn crafting materials after die */
 	if ( ClassDropMaterial.Num() > 0 )
 	{
 		int StartRange = 0;

@@ -11,6 +11,7 @@ class AAIShooterCharacter;
 class ATargetLocation;
 class AFPSHUD;
 
+/* Struct to avoid the problem of nested collections */
 USTRUCT(BlueprintType)
 struct FKeyWavesMap
 {

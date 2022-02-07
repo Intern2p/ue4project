@@ -23,6 +23,7 @@ public:
 	void AddCountMaterial(int count, FString MaterialName);
 
 private:
+	/* using map for the ability to expand func (for ex. add new type material) */
 	TMap<FString, int> CountMaterials;
 
 };
