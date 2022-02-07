@@ -13,8 +13,7 @@ AWeapon::AWeapon()
 {
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	RootComponent = MeshComp;
-	//MeshComp->SetupAttachment(SphereCollider);
-	SphereCollider->SetupAttachment(RootComponent);
+	MeshComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -56,7 +55,7 @@ void AWeapon::Fire()
 
 			EPhysicalSurface SurfaceType = SurfaceType_Default;
 			FHitResult Hit;
-			DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Green, true);
+			//DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Green, true);
 			if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, /*COLLISION_WEAPON*/ECC_Visibility, QueryParams))
 			{
 				if (Hit.bBlockingHit)

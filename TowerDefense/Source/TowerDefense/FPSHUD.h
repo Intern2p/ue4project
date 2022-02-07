@@ -28,22 +28,23 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class TSubclassOf<UUserWidget> GameOverWidget;
 
-	/*UPROPERTY(EditDefaultsOnly)
-	class TSubclassOf<UUserWidget> NumStageWidget;*/
+	UPROPERTY(EditDefaultsOnly)
+	class TSubclassOf<UUserWidget> NumStageWidget;
 
 	UFUNCTION()
 	void ShowGameOverWidget();
 
-	//UFUNCTION()
-	//void ShowStageWaveWidget();
-		
+	UFUNCTION()
+	void ShowStageWaveWidget();
+
 	// Primary draw call for the HUD.
 	virtual void DrawHUD() override;
 
 private:
 
-	//UUserWidget* WidgetStageWave;
+	FTimerHandle TimerHandle;
+	UUserWidget* WidgetStageWave;
 
-//	UFUNCTION()
-	//void HideStageWaveWidget();
+	UFUNCTION()
+	void HideStageWaveWidget();
 };

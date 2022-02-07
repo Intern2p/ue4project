@@ -8,7 +8,7 @@
 AMetal::AMetal()
 {
 	// STATS FOR ARMOR 
-	ArmorBlockingDamage = 25.f;
+	ArmorBlockingDamage = 30.f;
 	ArmorNecessaryCountMaterials = 3;
 }
 

@@ -120,10 +120,7 @@ void AAIShooterCharacter::Die()
 	SpawnCraftingMaterial();
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
-	if (DieAnimation != nullptr)
-	{
-		GetMesh()->PlayAnimation(DieAnimation, false);
-	}
+	
 	// Get the animation object for the die
 	/*if (AnimDieInstance != nullptr)
 	{

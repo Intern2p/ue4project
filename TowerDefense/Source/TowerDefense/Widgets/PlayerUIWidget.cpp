@@ -11,6 +11,7 @@
 #include "TowerDefense/SpawnElements/CraftingMaterials/Stone.h"
 #include "TowerDefense/SpawnElements/CraftingMaterials/Metal.h"
 #include "TowerDefense/TowerDefender_GameMode.h"
+#include "TowerDefense/TargetLocation.h"
 
 void UPlayerUIWidget::NativeConstruct()
 {
@@ -19,8 +20,18 @@ void UPlayerUIWidget::NativeConstruct()
 	if (Char)
 		OwnerCharacter = Char;
 
-	VisibleToolTip = ESlateVisibility::Hidden;
+	TArray<AActor*> FoundTarget;
+	TSubclassOf<ATargetLocation> classNameLocation = ATargetLocation::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), classNameLocation, FoundTarget);
+	for (AActor* TActor : FoundTarget)
+	{
+		TargetLocation = Cast<ATargetLocation>(TActor);
+	}
+
 	isActiveToolTip = true;
+	VisibleToolTip = ESlateVisibility::Hidden;
+	VisibleShowMessage = ESlateVisibility::Hidden;
+	VisibleDestructionBox = ESlateVisibility::Hidden;
 }
 
 //FText UPlayerUIWidget::SetToolTip()
@@ -82,6 +93,30 @@ void UPlayerUIWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			VisibleToolTip = ESlateVisibility::Visible;
 			ToolTipLabel->SetText(FText::FromString(OwnerCharacter->ToolTip));
+		}
+		
+
+		/*ShowMessage*/
+		if (OwnerCharacter->ShowMessage == "")
+		{
+			VisibleShowMessage = ESlateVisibility::Hidden;
+		}
+		else
+		{
+			VisibleShowMessage = ESlateVisibility::Visible;
+			ShowMessageLabel->SetText(FText::FromString(OwnerCharacter->ShowMessage));
+		}
+
+		/*Destruction*/
+		if (TargetLocation->isDestruct)
+		{
+			VisibleDestructionBox = ESlateVisibility::Visible;
+			DestructionBar->SetPercent(TargetLocation->PercentDestruction/100.f);
+			DestructionValue->SetText(FText::AsNumber(TargetLocation->PercentDestruction, &Opts));
+		}
+		else
+		{
+			VisibleDestructionBox = ESlateVisibility::Hidden;
 		}
 	}
 }

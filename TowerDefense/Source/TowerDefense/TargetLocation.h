@@ -19,10 +19,22 @@ class TOWERDEFENSE_API ATargetLocation : public ATriggerBox
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 public:
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Destruct)
+	bool isDestruct;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Destruct)
+	float PercentDestruction;
 
 	UFUNCTION()
 	void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
+	UFUNCTION()
+	void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
+
+	UFUNCTION()
+	void GameOver();
 };

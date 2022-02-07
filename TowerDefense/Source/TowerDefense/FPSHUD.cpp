@@ -46,27 +46,23 @@ void AFPSHUD::DrawHUD()
 
 void AFPSHUD::ShowGameOverWidget()
 {
-    if (GameOverWidget)
-    {
-        UUserWidget* createdWidget = CreateWidget<UUserWidget>(GetWorld(), GameOverWidget);
-        createdWidget->AddToViewport();
+    UUserWidget* createdWidget = CreateWidget<UUserWidget>(GetWorld(), GameOverWidget);
+    createdWidget->AddToViewport();
+}
+
+void AFPSHUD::ShowStageWaveWidget()
+{
+    if (NumStageWidget)
+    { 
+        if (!WidgetStageWave)
+            WidgetStageWave = CreateWidget<UUserWidget>(GetWorld(), NumStageWidget);
+        WidgetStageWave->AddToViewport();
+
+        GetWorldTimerManager().SetTimer(TimerHandle, this, &AFPSHUD::HideStageWaveWidget, 2, false);
     }
 }
 
-//void AFPSHUD::ShowStageWaveWidget()
-//{
-//    if (NumStageWidget)
-//    { 
-//     /*   if (!WidgetStageWave)
-//            WidgetStageWave = CreateWidget<UUserWidget>(GetWorld(), NumStageWidget);
-//        WidgetStageWave->AddToViewport();
-//
-//        FTimerHandle TimerHandle;
-//        GetWorldTimerManager().SetTimer(TimerHandle, this, &AFPSHUD::HideStageWaveWidget, 2, false);*/
-//    }
-//}
-
-//void AFPSHUD::HideStageWaveWidget()
-//{
-//    WidgetStageWave->RemoveFromViewport();
-//}
+void AFPSHUD::HideStageWaveWidget()
+{
+    WidgetStageWave->RemoveFromViewport();
+}

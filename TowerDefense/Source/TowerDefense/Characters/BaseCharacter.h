@@ -39,10 +39,10 @@ protected:
 	AArmor* ArmorWear;
 
 public:
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Health)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Health)
 	bool isAlive;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Equipment)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = Equipment)
 	bool bHasWeapon;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Equipment)
@@ -50,9 +50,6 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Equipment)
 	TSubclassOf<AActor> ArmorClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	UAnimSequence* DieAnimation;
 
 	UHealthComponent* Health;
 

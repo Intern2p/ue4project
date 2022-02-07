@@ -8,6 +8,7 @@
 
 class UInventoryComponent;
 class ADefenderCharacter;
+class ATargetLocation;
 UCLASS()
 class TOWERDEFENSE_API UPlayerUIWidget : public UUserWidget
 {
@@ -24,6 +25,7 @@ protected:
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	ADefenderCharacter* OwnerCharacter;
+	ATargetLocation* TargetLocation;
 
 private:
 
@@ -54,6 +56,15 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ToolTipLabel;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ShowMessageLabel;
+
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* DestructionBar; 
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* DestructionValue;
+
 public:
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
@@ -62,4 +73,9 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
 	ESlateVisibility VisibleToolTip;
 
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
+	ESlateVisibility VisibleShowMessage;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
+	ESlateVisibility VisibleDestructionBox;
 };

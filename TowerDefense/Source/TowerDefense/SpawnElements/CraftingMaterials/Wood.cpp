@@ -9,7 +9,7 @@ AWood::AWood()
 {
 	// STATS FOR ARMOR 
 	ArmorBlockingDamage = 10.f;
-	ArmorNecessaryCountMaterials = 7;
+	ArmorNecessaryCountMaterials = 10;
 }
 
 float AWood::GetArmorBlockingDamage()

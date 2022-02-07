@@ -24,6 +24,8 @@ ATowerDefender_GameMode::ATowerDefender_GameMode()
 		HUDClass = FPSHUDBPClass.Class;
 	}
 
+	IndexCurrentWave = 0;
+	IndexCurrentMob = 0;
 }
 
 void ATowerDefender_GameMode::BeginPlay()
@@ -44,25 +46,32 @@ void ATowerDefender_GameMode::BeginPlay()
 	}
 
 	/*Get Target Location*/
-	//TSubclassOf<ATargetLocation> classNameLocation = ATargetLocation::StaticClass();
-	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), classNameLocation, FoundTarget);
-	//for (AActor* TActor : FoundTarget)
-	//{
-	//	FinallyLocation = Cast<ATargetLocation>(TActor);	
-	//}
+	TSubclassOf<ATargetLocation> classNameLocation = ATargetLocation::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), classNameLocation, FoundTarget);
+	for (AActor* TActor : FoundTarget)
+	{
+		FinallyLocation = Cast<ATargetLocation>(TActor);	
+	}
 
-	//PlayerHUD = Cast<AFPSHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD());
+	PlayerHUD = Cast<AFPSHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD());
 
 	/* Start Waves */
 	if (Waves.Num() > 0)
-		StartGame();
+	{
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDel;
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ATowerDefender_GameMode::StartGame, Waves[IndexCurrentWave].BreakTimeBefore, false);
+	}
 }
 
 void ATowerDefender_GameMode::StartGame()
 {
-	//ShowWidgetWaveBegin();
+	
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Wave num %d"), IndexCurrentWave));
+	IndexCurrentMob = 0;
 
-	if (IndexCurrentWave >= Waves.Num())
+	if (IndexCurrentWave >= Waves.Num() - 1)
 	{
 		return;
 	}
@@ -75,7 +84,12 @@ void ATowerDefender_GameMode::StartGame()
 /* recursion */
 void ATowerDefender_GameMode::StartWave()
 {
-	if (IndexCurrentMob >= Waves[IndexCurrentWave].Mobs.Num())
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Mob num %d"), IndexCurrentMob));
+	if (IndexCurrentMob == 0)
+		ShowWidgetWaveBegin();
+
+	if (IndexCurrentMob >= Waves[IndexCurrentWave].Mobs.Num() - 1)
 	{
 		IndexCurrentWave++;
 		StartGame();
@@ -102,17 +116,18 @@ void ATowerDefender_GameMode::SpawnMob(TSubclassOf<AAIShooterCharacter> ClassCha
 
 		int index = FMath::RandRange(StartRange, EndRange);
 		AAIShooterCharacter* Char = GetWorld()->SpawnActor<AAIShooterCharacter>(ClassChar, Spawners[index]->GetActorLocation(), Spawners[index]->GetActorRotation());
-		//if (FinallyLocation != nullptr)
-		//{
-		//	//AAIControllerShooterCharacter* AIController = Cast<AAIControllerShooterCharacter>(Char->GetController());
-		//	//AIController->FinallyLocation = FinallyLocation;
-		//	//AIController->SetTargetLocation(FinallyLocation->GetActorLocation());
-		//}
+		if (FinallyLocation != nullptr)
+		{
+			AAIControllerShooterCharacter* AIController = Cast<AAIControllerShooterCharacter>(Char->GetController());
+			AIController->FinallyLocation = FinallyLocation;
+			AIController->SetTargetLocation(FinallyLocation->GetActorLocation());
+		}
 	}
 }
 
-//void ATowerDefender_GameMode::ShowWidgetWaveBegin()
-//{
-//	if (PlayerHUD)
-//		PlayerHUD->ShowStageWaveWidget();
-//}
+void ATowerDefender_GameMode::ShowWidgetWaveBegin()
+{
+	if (PlayerHUD)
+		PlayerHUD->ShowStageWaveWidget();
+}
+

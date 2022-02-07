@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FString ToolTip;
 
+	UPROPERTY(EditDefaultsOnly)
+	FString ShowMessage;
+
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = Gameplay)
 	FVector RespawnLocation;
 
@@ -68,5 +71,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+private:	
+	FTimerHandle TimerHandle;
 };
 

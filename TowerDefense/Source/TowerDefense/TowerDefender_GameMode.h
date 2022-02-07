@@ -6,7 +6,6 @@
 #include "GameFramework/GameMode.h"
 #include "TowerDefender_GameMode.generated.h"
 
-struct TPKeyWavesMap;
 class ASpawnerAIShooterCharacters;
 class AAIShooterCharacter;
 class ATargetLocation;
@@ -17,14 +16,14 @@ struct FKeyWavesMap
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
-	TArray<TSubclassOf<AAIShooterCharacter>> Mobs;
+		UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
+		TArray<TSubclassOf<AAIShooterCharacter>> Mobs;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
-	float FrequencySpawn;
+		float FrequencySpawn;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
-	float BreakTimeBefore;
+		float BreakTimeBefore;
 };
 
 UCLASS()
@@ -33,16 +32,15 @@ class TOWERDEFENSE_API ATowerDefender_GameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
-
 	ATowerDefender_GameMode();
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
 	TArray<FKeyWavesMap> Waves;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = GameSettings)
 	int IndexCurrentWave;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = GameSettings)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = GameSettings)
 	int IndexCurrentMob;
 
 protected:
@@ -51,8 +49,9 @@ protected:
 
 private:
 	TArray<ASpawnerAIShooterCharacters*> Spawners;
-	//ATargetLocation* FinallyLocation;
-	//AFPSHUD* PlayerHUD;
+
+	ATargetLocation* FinallyLocation;
+	AFPSHUD* PlayerHUD;
 
 	UFUNCTION()
 	void StartGame();
@@ -63,7 +62,7 @@ private:
 	UFUNCTION()
 	void SpawnMob(TSubclassOf<AAIShooterCharacter> ClassChar);
 
-	/*UFUNCTION()
-	void ShowWidgetWaveBegin();*/
+	UFUNCTION()
+	void ShowWidgetWaveBegin();
 
 };

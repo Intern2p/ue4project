@@ -9,7 +9,7 @@ AStone::AStone()
 {
 	// STATS FOR ARMOR 
 	ArmorBlockingDamage = 20.f;
-	ArmorNecessaryCountMaterials = 5;
+	ArmorNecessaryCountMaterials = 6;
 }
 
 float AStone::GetArmorBlockingDamage()

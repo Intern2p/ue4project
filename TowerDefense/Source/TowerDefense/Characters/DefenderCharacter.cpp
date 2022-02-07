@@ -129,28 +129,27 @@ void ADefenderCharacter::PickUpItem()
 		SpawnElement->PickUpElement(this, this->Inventory);
 		SpawnElement->Destroy();
 
-		FTimerHandle TimerHandle;
-		FTimerDelegate TimerDel;
-		GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::ClearToolTip, 3.f, false);
+		if (ShowMessage != CreateArmorToolTip)
+		{
+			GetWorldTimerManager().ClearTimer(TimerHandle);
+			GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::ClearToolTip, 4.f, false);
 
-		ToolTip = AddToInventoryToolTip;
+			ShowMessage = AddToInventoryToolTip;
+		}
 	}
 }
 
 void ADefenderCharacter::ClearToolTip()
 {	
-	if (ToolTip == AddToInventoryToolTip || ToolTip == CreateArmorToolTip)
-		ToolTip.Empty();
+	ShowMessage.Empty();
 }
 
 void ADefenderCharacter::Die()
 {
 	Super::Die();
 
-	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDel;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::Respawn, 5.f, false);
-
+	FTimerHandle TimerHandleResp;
+	GetWorldTimerManager().SetTimer(TimerHandleResp, this, &ADefenderCharacter::Respawn, 5.f, false);
 }
 void ADefenderCharacter::Respawn()
 {
@@ -164,8 +163,7 @@ void ADefenderCharacter::CreateCharacterNewArmor(UClass* ClassArmor)
 	ArmorClass = ClassArmor;
 	ArmorWear->CreateNewArmor(ClassArmor);
 
-	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDel;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::ClearToolTip, 3.f, false);
-	ToolTip = CreateArmorToolTip;
+	GetWorldTimerManager().ClearTimer(TimerHandle);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADefenderCharacter::ClearToolTip, 6.f, false);
+	ShowMessage = CreateArmorToolTip;
 }
